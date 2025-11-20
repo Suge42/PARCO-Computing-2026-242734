@@ -1,35 +1,12 @@
-/* 
-*   Matrix Market I/O example program
-*
-*   Read a real (non-complex) sparse matrix from a Matrix Market (v. 2.0) file.
-*   and copies it to stdout.  This porgram does nothing useful, but
-*   illustrates common usage of the Matrix Matrix I/O routines.
-*   (See http://math.nist.gov/MatrixMarket for details.)
-*
-*   Usage:  a.out [filename] > output
-*
-*       
-*   NOTES:
-*
-*   1) Matrix Market files are always 1-based, i.e. the index of the first
-*      element of a matrix is (1,1), not (0,0) as in C.  ADJUST THESE
-*      OFFSETS ACCORDINGLY offsets accordingly when reading and writing 
-*      to files.
-*
-*   2) ANSI C requires one to use the "l" format modifier when reading
-*      double precision floating point numbers in scanf() and
-*      its variants.  For example, use "%lf", "%lg", or "%le"
-*      when reading doubles, otherwise errors will occur.
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "mmio.h"
-#include "bubblesort.c"
+#include "libraries/mmio.h"
+#include "libraries/mmio.c"
+#include "libraries/bubblesort.c"
 #include <omp.h>
 
-#define REPETITIONS 1
+#define REPETITIONS 10
 
 void fill_vector(int *vec, int size) {
     srand(time(NULL));
@@ -39,7 +16,7 @@ void fill_vector(int *vec, int size) {
     }
 }
 
-void sequential_moltiplication(int *row_ptr, double *values, int *vec, double *result, int M, int nz) {
+void seq_molt(int *row_ptr, double *values, int *vec, double *result, int M, int nz) {
     // Go through each row (row_ptr has M+1 elements)
     for (int i = 0; i < M; i++) {
         // For each row, go through its non-zero elements
@@ -50,13 +27,52 @@ void sequential_moltiplication(int *row_ptr, double *values, int *vec, double *r
     }
 }
 
-void parallel_moltiplication(int *row_ptr, double *values, int *vec, double *result, int M, int nz) {
+void csr_par_molt(int *row_ptr, double *values, int *vec, double *result, int M, int nz) {
     // This time we parallelize the inner loop since is the most time consuming
     for (int i = 0; i < M; i++) {
         #pragma omp parallel for reduction(+:result[i])
         for (int j = row_ptr[i]; j < row_ptr[i+1]; j++) {
             //printf("Row %d, accessing value index %d\n", i, j);
             result[i] += values[j] * vec[i];
+        }
+    }
+}
+
+void csr2_par_molt(int *s_row, int num_sr, int *row_ptr, double *values, int *vec, double *result) {
+    #pragma omp parallel for
+    for(int i = 0; i < num_sr; i++) {
+        int sr_start = s_row[i];
+        int sr_end = s_row[i+1];
+
+        for (int j = sr_start; j < sr_end; j++) {
+            int row_start = row_ptr[j];
+            int row_end = row_ptr[j+1];
+
+            for(int k = row_start; k < row_end; k++) {
+                result[j] += values[k] * vec[j];
+            }
+        }
+    }
+}
+
+void csr3_par_molt(int *ss_row, int num_ssr, int *s_row, int *row_ptr, double *values, int *vec, double *result) {
+    #pragma omp parallel for
+    for(int i = 0; i < num_ssr; i++) {
+        int ssr_start = ss_row[i];
+        int ssr_end = ss_row[i+1];
+
+        for (int j = ssr_start; j < ssr_end; j++) {
+            int sr_start = s_row[j];
+            int sr_end = s_row[j+1];
+
+            for (int k = sr_start; k < sr_end; k++) {
+                int row_start = row_ptr[k];
+                int row_end = row_ptr[k+1];
+
+                for(int l = row_start; l < row_end; l++) {
+                    result[k] += values[l] * vec[k];
+                }
+            }
         }
     }
 }
@@ -70,7 +86,7 @@ int main(int argc, char *argv[])
     int N; // Number of columns
     int nz; // Total number of non-zero entries
     int i, *I, *J;
-    double *val;
+    double *vals;
     int *ordered_rows;
     int *ordered_colums;
     double *ordered_val;
@@ -112,19 +128,20 @@ int main(int argc, char *argv[])
     /* reseve memory for matrices */
     I = (int *) malloc(nz * sizeof(int)); // Rows pointer
     J = (int *) malloc(nz * sizeof(int)); // Columns pointer
-    val = (double *) malloc(nz * sizeof(double)); // Values pointer
+    vals = (double *) malloc(nz * sizeof(double)); // Values pointer
 
 
     /* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
     /*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
     /*  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            */
     for (i=0; i<nz; i++) {
-        fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
+        fscanf(f, "%d %d %lg\n", &I[i], &J[i], &vals[i]);
         I[i]--;  /* adjust from 1-based to 0-based */
         J[i]--;
     }
 
-    if (f !=stdin) fclose(f);
+    if (f !=stdin)
+        fclose(f);
 
     // Print the matrix
     /*mm_write_banner(stdout, matcode);
@@ -139,19 +156,19 @@ int main(int argc, char *argv[])
 
 
     // Sort by row indices
-    bubbleSort(I, J, val, nz);
+    bubbleSort(I, J, vals, nz);
     
     //Conversion from COO to CSR
     int index = 0;
     int current_row = 0;
-    int *a_row = (int *) malloc((M+1) * sizeof(int));
-    a_row[0] = 0;
-    a_row[1] = 0; // This is enough to initialie the array;
+    int *row_ptr = (int *) malloc((M+1) * sizeof(int));
+    row_ptr[0] = 0;
+    row_ptr[1] = 0; // This is enough to initialie the array;
 
     while (index < nz && current_row < M) {
         if (I[index] == current_row) {
             // If I have an element in the current row, increment the row pointer
-            a_row[current_row+1]++;
+            row_ptr[current_row+1]++;
 
             // I only increase the index if I have found an element in the new row;
             // Otherwise, I keep the same index to check with the next row value;
@@ -160,7 +177,7 @@ int main(int argc, char *argv[])
             // If the element is not in the current row, I move to the next
             // and copy the starting value from the previous one;
             current_row++;
-            a_row[current_row+1] = a_row[current_row];
+            row_ptr[current_row+1] = row_ptr[current_row];
         }
     }
 
@@ -171,63 +188,192 @@ int main(int argc, char *argv[])
     }*/
 
 
-    // Create random vector
-    int *vec = (int *) malloc((M) * sizeof(int));
-    fill_vector(vec, M);
-    // Print vector
-    /*for (i=0; i<M; i++) {
-        printf("Vec[%d]: %d\n", i, vec[i]);
+    // Creation of sr and ssr vectors for CSR-K
+
+    // Evalueate size of sr vector
+    // we choose SRS = 96 as suggested in the paper (each group of row will have at max 96 matrix elements)
+    int sr_size = 96;
+    int progress = 0;
+    int num_sr = 1; // First element is always 0
+    for (i = 0; i < M; i++) {
+        // We count the elements of each rows to decide how to group them
+        progress += row_ptr[i+1] - row_ptr[i];
+        if (progress > sr_size) {
+            num_sr++;
+            //printf("progress exceeded at row %d with progress %d\n", i, progress);
+            progress = row_ptr[i+1] - row_ptr[i]; // We start the new group with the current row
+        }
+    }
+    //printf("SR vector length: %d\n", sr_length);
+
+    int *s_row = (int *) malloc((num_sr+1) * sizeof(int));
+    s_row[0] = 0;
+    progress = 0;
+    int j = 1;
+    for (i = 0; i < M; i++) {
+        progress += row_ptr[i+1] - row_ptr[i];
+        //count++;
+        if (progress > sr_size) {
+            s_row[j] = i;
+            j++;
+            progress = row_ptr[i+1] - row_ptr[i];
+        }
+    }
+    s_row[j] = M; // Last element is always M
+
+    // Print sr vector
+    /*printf("SR vector:\n");
+    for (i = 0; i <= sr_length; i++) {
+        printf("SR[%d]: %d\n", i, s_row[i]);
     }*/
 
+
+
+    int ssr_size = 32; // Each sub-group will have 32 elements from row_ptr vector
+    progress = 0;
+    int num_ssr = 1; // First element is always 0
+    for (i = 0; i < num_sr; i++) {
+        progress += s_row[i+1] - s_row[i];
+        if (progress > ssr_size) {
+            num_ssr++;
+            progress = s_row[i+1] - s_row[i];
+        }
+    }
+
+    int *ss_row = (int *) malloc((num_ssr+1) * sizeof(int));
+    ss_row[0] = 0;
+    progress = 0;
+    j = 1;
+    for (i = 0; i < num_sr; i++) {
+        progress += s_row[i+1] - s_row[i];
+        //count++;
+        if (progress > ssr_size) {
+            ss_row[j] = i;
+            j++;
+            progress = s_row[i+1] - s_row[i];
+        }
+    }
+    ss_row[j] = num_sr;
+
+    /*printf("SSR vector:\n");
+    for (i = 0; i <= num_ssr; i++) {
+        printf("SSR[%d]: %d\n", i, ss_row[i]);
+    }*/
+
+    double start, end;
+    double seq_cpu_time_used, csr_cpu_time_used, csr2_cpu_time_used, csr3_cpu_time_used;
+
+    // Collect the speedup values to plot the graph later
+    double *csr_speedup_values = (double *) malloc(REPETITIONS * sizeof(double));
+    double *csr2_speedup_values = (double *) malloc(REPETITIONS * sizeof(double));
+    double *csr3_speedup_values = (double *) malloc(REPETITIONS * sizeof(double));
+
+    // NORMAL PARALLELIZATION TESTING
     for (int r = 0; r < REPETITIONS; r++) {
-        // Matrix-vector multiplication
-        double *sequential_result = (double *) malloc((M) * sizeof(double));
-        double *parallel_result = (double *) malloc((M) * sizeof(double));
+
+        // Create random vector
+        int *rand_vec = (int *) malloc((M) * sizeof(int));
+        fill_vector(rand_vec, M);
+        // Print vector
+        /*for (i=0; i<M; i++) {
+            printf("Vec[%d]: %d\n", i, vec[i]);
+        }*/
+                
+        double *seq_result = (double *) malloc((M) * sizeof(double));
+        double *csr_par_result = (double *) malloc((M) * sizeof(double));
+        double *csr2_par_result = (double *) malloc((M) * sizeof(double));
+        double *csr3_par_result = (double *) malloc((M) * sizeof(double));
         for (i = 0; i < M; i++) {
-            sequential_result[i] = 0.0;
-            parallel_result[i] = 0.0;
+            seq_result[i] = 0.0;
+            csr_par_result[i] = 0.0;
+            csr2_par_result[i] = 0.0;
         }
 
-        clock_t start, end;
-        double seq_cpu_time_used, par_cpu_time_used;
-
-        start = omp_get_wtime();
+        start = omp_get_wtime() * 1000.0;
         // Sequential SpMV
-        sequential_moltiplication(a_row, val, vec, sequential_result, M, nz);
-        end = omp_get_wtime();
+        seq_molt(row_ptr, vals, rand_vec, seq_result, M, nz);
+        end = omp_get_wtime() * 1000.0;
         seq_cpu_time_used = end - start;
 
-        start = omp_get_wtime();
+        start = omp_get_wtime() * 1000.0;
         // Parallel SpMV
-        parallel_moltiplication(a_row, val, vec, parallel_result, M, nz);
-        end = omp_get_wtime();
-        par_cpu_time_used = end - start;
+        csr_par_molt(row_ptr, vals, rand_vec, csr_par_result, M, nz);
+        end = omp_get_wtime() * 1000.0;
+        //printf("Start %f\n", start);
+        //printf("End %f\n", end);
+        csr_cpu_time_used = end - start;
+
+
+        start = omp_get_wtime() * 1000.0;
+        // CSR-2 Parallel SpMV
+        csr2_par_molt(s_row, num_sr, row_ptr, vals, rand_vec, csr2_par_result);
+        end = omp_get_wtime() * 1000.0;
+        csr2_cpu_time_used = end - start;
+
+
+        start = omp_get_wtime() * 1000.0;
+        // CSR-3 Parallel SpMV
+        csr3_par_molt(ss_row, num_ssr, s_row, row_ptr, vals, rand_vec, csr3_par_result);
+        end = omp_get_wtime() * 1000.0;
+        csr3_cpu_time_used = end - start;
+        
 
         printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
-        printf("Sequential execution time for execution %d: %f seconds\n", r, seq_cpu_time_used);
-        printf("Parallel execution time for execution %d: %f seconds\n", r, par_cpu_time_used);
-        double speedup = seq_cpu_time_used / par_cpu_time_used * 100.0;
-        printf("Speedup for execution %d: %.2f\n", r, speedup);
+        printf("Sequential execution time for execution %d: %f milliseconds\n", r+1, seq_cpu_time_used);
+        printf("Parallel execution time for execution %d: %f milliseconds\n", r+1, csr_cpu_time_used);
+        printf("CSR-2 Parallel execution time for execution %d: %f milliseconds\n", r+1, csr2_cpu_time_used);
+        printf("CSR-3 Parallel execution time for execution %d: %f milliseconds\n", r+1, csr3_cpu_time_used);
+        csr_speedup_values[r] = seq_cpu_time_used / csr_cpu_time_used * 100.0;
+        csr2_speedup_values[r] = seq_cpu_time_used / csr2_cpu_time_used * 100.0;
+        csr3_speedup_values[r] = seq_cpu_time_used / csr3_cpu_time_used * 100.0;
+        printf("Speedup par for execution %d : %.2f%%\n", r+1, csr_speedup_values[r]);
+        printf("Speedup CSR-2 for execution %d : %.2f%%\n", r+1, csr2_speedup_values[r]);
+        printf("Speedup CSR-3 for execution %d : %.2f%%\n", r+1, csr3_speedup_values[r]);
 
         // Check results
-        int match = 0;
-        int mismatch = 0;
-        for (i = 0; i < M; i++) {
-            if (sequential_result[i] != parallel_result[i]) {
-                mismatch++;
-            } else {
-                match++;
+        bool correct = true;
+        for (i = 0; i<M; i++) {
+            if ((seq_result[i] - csr_par_result[i]) > 0.00001 || (csr_par_result[i] - seq_result[i]) > 0.00001) {
+                correct = false;
             }
         }
-        double precision = (double)match / (double)(match + mismatch) * 100.0;
+        if (correct) {
+            printf("Results are correct for normal parallelization.\n");
+        } else {
+            printf("Results are NOT correct for normal parallelization.\n");
+        }
+
+
+        correct = true;
+        for (i = 0; i<M; i++) {
+            if ((seq_result[i] - csr2_par_result[i]) > 0.00001 || (csr2_par_result[i] - seq_result[i]) > 0.00001) {
+                correct = false;
+            }
+        }
+        if (correct) {
+            printf("Results are correct for CSR-2 parallelization.\n");
+        } else {
+            printf("Results are NOT correct for CSR-2 parallelization.\n");
+        }
+
+
+        correct = true;
+        for (i = 0; i<M; i++) {
+            if ((seq_result[i] - csr3_par_result[i]) > 0.00001 || (csr3_par_result[i] - seq_result[i]) > 0.00001) {
+                correct = false;
+            }
+        }
+        if (correct) {
+            printf("Results are correct for CSR-3 parallelization.\n");
+        } else {
+            printf("Results are NOT correct for CSR-3 parallelization.\n");
+        }
+
         printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
-        printf("Precision of parallel result for execution %d: %.2f%% (%d matches, %d mismatches)\n", r, precision, match, mismatch);
-        printf("The precision error is due to the non-associativity of floating point addition.\n");
-        //printf("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n");
         printf("\n");
 
-        free(sequential_result);
-        free(parallel_result);
+        free(seq_result);
+        free(csr_par_result);
 
         /*for (i = 0; i < M; i++) {
             printf("Sequential result[%d]: %f\n", i, sequential_result[i]);
@@ -238,6 +384,9 @@ int main(int argc, char *argv[])
 
         fflush(stdout);
     }
+
+    //plot_graph(speedup_values, "plots/speedup_regular_parallelization.png");
+    //plot_graph(speedup_values, "plot.png");
 
 
 
