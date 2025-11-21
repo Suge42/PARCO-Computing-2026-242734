@@ -5,6 +5,8 @@
 #include "libraries/mmio.c"
 #include "libraries/bubblesort.c"
 #include <omp.h>
+#include <string.h>
+#include <stdbool.h>
 
 #define REPETITIONS 10
 
@@ -14,6 +16,47 @@ void fill_vector(int *vec, int size) {
     for (int i = 0; i < size; i++) {
         vec[i] = (rand() % 9) +1; // Random integers between 1 and 9
     }
+}
+
+int find_outlier(double *values, int size) {
+    double avg = 0.0;
+    for (int i = 0; i < size; i++) {
+        avg += values[i];
+    }
+    avg = avg / (double)size;
+
+    int more_distant_index = 0;
+    int bigger_distance = values[0] - avg;
+    if (bigger_distance < 0) {
+        bigger_distance = -bigger_distance;
+    }
+    
+    for (int i = 1; i < size; i++) {
+        double current_distance = values[i] - avg;
+        if (current_distance < 0) {
+            current_distance = -current_distance;
+        }
+
+        if (current_distance > bigger_distance) {
+            bigger_distance = current_distance;
+            more_distant_index = i;
+        }
+    }
+
+    return more_distant_index;
+}
+
+void compute_avg_speedup(double *speedup_values, int size, double *avg_speedup) {
+    int outlier_index = find_outlier(speedup_values, size);
+
+    double total = 0.0;
+    for (int i = 0; i < size; i++) {
+        if (i == outlier_index) {
+            continue;
+        }
+        total += speedup_values[i];
+    }
+    *avg_speedup = total / (double)(size-1);
 }
 
 void seq_molt(int *row_ptr, double *values, int *vec, double *result, int M, int nz) {
@@ -385,9 +428,39 @@ int main(int argc, char *argv[])
         fflush(stdout);
     }
 
-    //plot_graph(speedup_values, "plots/speedup_regular_parallelization.png");
-    //plot_graph(speedup_values, "plot.png");
+    double par_avg_speedup = 0.0;
+    double csr2_avg_speedup = 0.0;
+    double csr3_avg_speedup = 0.0;
+    compute_avg_speedup(csr_speedup_values, REPETITIONS, &par_avg_speedup);
+    compute_avg_speedup(csr2_speedup_values, REPETITIONS, &csr2_avg_speedup);
+    compute_avg_speedup(csr3_speedup_values, REPETITIONS, &csr3_avg_speedup);
 
+    // Write results to file to be plotted later
+    FILE *fptr;
+
+    char filename[64] = "to_plot/";
+    strcat(filename, argv[1]);
+    strcat(filename, "_results.txt");
+
+    fptr = fopen(filename, "w");
+
+    char print[33] = "";
+    snprintf (print, 10, "%4.6f", par_avg_speedup);
+    strcat(print, ",");
+    
+    char tmp[10];
+    snprintf (tmp, 10, "%4.6f", csr2_avg_speedup);
+    strcat(print, tmp);
+    strcat(print, ",");
+
+    snprintf (tmp, 10, "%4.6f", csr3_avg_speedup);
+    strcat(print, tmp);
+    strcat(print, "\n");
+
+
+    fprintf(fptr, print);
+
+    fclose(fptr);
 
 
 
