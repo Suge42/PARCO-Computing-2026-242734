@@ -32,7 +32,7 @@ It's tailor made to use all the matrixes, and won't work without any of their re
 ## Additional usage
 ### Single execution
 
-The `deliverable1.c` can be manually compiler and run.
+The `deliverable1.c` can be manually compiled and run.
 
 ```
     gcc -O3 -fopenmp deliverable1.c -o del1
