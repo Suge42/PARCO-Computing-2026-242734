@@ -5,6 +5,7 @@
 ### Single execution on cluster
 
 To run the code using the `.pbs` file;
+The arguments for the program must be passed through the `-v` flag to have them as ambient variables;
 Useful to check the results of a single matrix and to try different numbers of threads.
 ```
     qsub -q short_cpuQ -v MATRIX_FILE="[matrix_file_address]",N_THREADS="[number_of_threads] ./del1_single_matrix.pbs
