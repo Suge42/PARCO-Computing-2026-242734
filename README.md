@@ -6,7 +6,7 @@
 
 To run the code using the `.pbs` file;
 Useful to check the results of a single matrix and to try different numbers of threads.
-```toml
+```
     qsub -q short_cpuQ -v MATRIX_FILE="[matrix_file_address]",N_THREADS="[number_of_threads] ./del1_single_matrix.pbs
 ```
 
