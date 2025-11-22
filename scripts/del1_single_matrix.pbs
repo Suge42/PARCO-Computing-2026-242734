@@ -1,20 +1,17 @@
 #!/bin/bash
 #PBS -N del1_single_matrix
-#PBS -o ./results/del1_sm.out
-#PBS -e ./results/del1_sm.err
+#PBS -o results/del1_sm.out
+#PBS -e results/del1_sm.err
 #PBS -q short_cpuQ
 #PBS -l walltime=0:15:00
-#PBS -l select=1:ncpus=32:mem=8gb
+#PBS -l select=1:ncpus=24:mem=8gb
 
 # Test a single matrix, choosing file and number of threads from the command line
-#MATRIX_FILE=$1
-#N_THREADS=$2
-
 if [[ -z $MATRIX_FILE ]]; then
   echo "Missing matrix file" >&2
   exit 1
 fi
-if [[ -z $MATRIX_FILE ]]; then
+if [[ -z $N_THREADS ]]; then
   echo "Missing number of threads" >&2
   exit 1
 fi
@@ -30,11 +27,12 @@ echo "Testinng a matrix"
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
 # Compile and run
-gcc-9.1.0 -O3 -fopenmp deliverable1.c -o del1_sm
+gcc-9.1.0 -O3 -fopenmp ./src/deliverable1.c -o del1_sm
 
 echo "Running: $MATRIX_FILE matrix"
 ./del1_sm $MATRIX_FILE $N_THREADS
 
+rm del1_sm
 echo ""
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "Execution completed"

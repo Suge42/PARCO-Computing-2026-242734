@@ -1,0 +1,138 @@
+Working directory: /home/leonardo.sandrini/Deliverable1
+Testinng a matrix
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Running: ./src/1138_bus.mtx matrix
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 1: 0.012017 milliseconds
+Parallel execution time for execution 1: 2.992726 milliseconds
+CSR-2 Parallel execution time for execution 1: 0.012700 milliseconds
+CSR-3 Parallel execution time for execution 1: 0.034620 milliseconds
+Speedup par for execution 1 : 0.40%
+Speedup CSR-2 for execution 1 : 94.62%
+Speedup CSR-3 for execution 1 : 34.71%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 2: 0.009280 milliseconds
+Parallel execution time for execution 2: 2.560636 milliseconds
+CSR-2 Parallel execution time for execution 2: 0.006832 milliseconds
+CSR-3 Parallel execution time for execution 2: 0.035521 milliseconds
+Speedup par for execution 2 : 0.36%
+Speedup CSR-2 for execution 2 : 135.83%
+Speedup CSR-3 for execution 2 : 26.13%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 3: 0.008350 milliseconds
+Parallel execution time for execution 3: 2.590272 milliseconds
+CSR-2 Parallel execution time for execution 3: 0.005260 milliseconds
+CSR-3 Parallel execution time for execution 3: 0.020666 milliseconds
+Speedup par for execution 3 : 0.32%
+Speedup CSR-2 for execution 3 : 158.73%
+Speedup CSR-3 for execution 3 : 40.40%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 4: 0.006655 milliseconds
+Parallel execution time for execution 4: 2.570357 milliseconds
+CSR-2 Parallel execution time for execution 4: 0.005434 milliseconds
+CSR-3 Parallel execution time for execution 4: 0.017007 milliseconds
+Speedup par for execution 4 : 0.26%
+Speedup CSR-2 for execution 4 : 122.46%
+Speedup CSR-3 for execution 4 : 39.13%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 5: 0.006605 milliseconds
+Parallel execution time for execution 5: 2.665214 milliseconds
+CSR-2 Parallel execution time for execution 5: 0.005295 milliseconds
+CSR-3 Parallel execution time for execution 5: 0.027508 milliseconds
+Speedup par for execution 5 : 0.25%
+Speedup CSR-2 for execution 5 : 124.74%
+Speedup CSR-3 for execution 5 : 24.01%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 6: 0.007035 milliseconds
+Parallel execution time for execution 6: 2.522841 milliseconds
+CSR-2 Parallel execution time for execution 6: 0.005056 milliseconds
+CSR-3 Parallel execution time for execution 6: 0.018941 milliseconds
+Speedup par for execution 6 : 0.28%
+Speedup CSR-2 for execution 6 : 139.13%
+Speedup CSR-3 for execution 6 : 37.14%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 7: 0.006269 milliseconds
+Parallel execution time for execution 7: 2.664385 milliseconds
+CSR-2 Parallel execution time for execution 7: 0.006687 milliseconds
+CSR-3 Parallel execution time for execution 7: 0.029045 milliseconds
+Speedup par for execution 7 : 0.24%
+Speedup CSR-2 for execution 7 : 93.75%
+Speedup CSR-3 for execution 7 : 21.58%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 8: 0.006425 milliseconds
+Parallel execution time for execution 8: 2.537106 milliseconds
+CSR-2 Parallel execution time for execution 8: 0.004684 milliseconds
+CSR-3 Parallel execution time for execution 8: 0.016811 milliseconds
+Speedup par for execution 8 : 0.25%
+Speedup CSR-2 for execution 8 : 137.16%
+Speedup CSR-3 for execution 8 : 38.22%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 9: 0.006296 milliseconds
+Parallel execution time for execution 9: 2.490398 milliseconds
+CSR-2 Parallel execution time for execution 9: 0.005593 milliseconds
+CSR-3 Parallel execution time for execution 9: 0.031811 milliseconds
+Speedup par for execution 9 : 0.25%
+Speedup CSR-2 for execution 9 : 112.58%
+Speedup CSR-3 for execution 9 : 19.79%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Sequential execution time for execution 10: 0.007561 milliseconds
+Parallel execution time for execution 10: 2.920187 milliseconds
+CSR-2 Parallel execution time for execution 10: 0.005784 milliseconds
+CSR-3 Parallel execution time for execution 10: 0.016388 milliseconds
+Speedup par for execution 10 : 0.26%
+Speedup CSR-2 for execution 10 : 130.72%
+Speedup CSR-3 for execution 10 : 46.14%
+Results are correct for normal parallelization.
+Results are correct for CSR-2 parallelization.
+Results are correct for CSR-3 parallelization.
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Execution completed
+Exit code: 0

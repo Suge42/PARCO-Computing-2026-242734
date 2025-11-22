@@ -1,10 +1,10 @@
 #!/bin/bash
 #PBS -N del1_multiple_matrixes
-#PBS -o ./results/del1_mm.out
-#PBS -e ./results/del1_mm.err
+#PBS -o results/del1_mm.out
+#PBS -e results/del1_mm.err
 #PBS -q short_cpuQ
 #PBS -l walltime=0:15:00
-#PBS -l select=1:ncpus=32:mem=8gb
+#PBS -l select=1:ncpus=24:mem=8gb
 
 # Test 5 different matrixes in one run, useful to get all the plotting data
 
@@ -19,32 +19,35 @@ echo "Testinng 5 matrixes"
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
 # Compile and run
-gcc-9.1.0 -O3 -fopenmp deliverable1.c -o del1_mm
+gcc-9.1.0 -O3 -fopenmp ./src/deliverable1.c -o del1_mm
 
-N_THREADS=24
+N_THREADS=4 # Most efficient from testing
 
 # XXX..X spacing used to better recognize when a new matrix start, since its tested 10 times and it can become quite busy
 echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 echo "Running: 1138_bus.mtx matrix"
-./del1_mm 1138_bus.mtx $N_THREADS
+./del1_mm ./src/1138_bus.mtx $N_THREADS
 
 echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 echo "Running: illc1850.mtx matrix"
-./del1_mm illc1850.mtx $N_THREADS
+./del1_mm ./src/illc1850.mtx $N_THREADS
 
 echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 echo "Running: bcsstk25.mtx matrix"
-./del1_mm bcsstk25.mtx $N_THREADS
+./del1_mm ./src/bcsstk25.mtx $N_THREADS
 
 echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 echo "Running: bcspwr10.mtx matrix"
-./del1_mm bcspwr10.mtx $N_THREADS
+./del1_mm ./src/bcspwr10.mtx $N_THREADS
 
 echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 echo "Running: bcspwr8.mtx matrix"
-./del1_mm bcspwr08.mtx $N_THREADS
+./del1_mm ./src/bcspwr08.mtx $N_THREADS
 
+rm del1_mm
 echo ""
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 echo "Execution completed"
 echo "Exit code: $?"
+
+

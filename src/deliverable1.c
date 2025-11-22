@@ -434,15 +434,27 @@ int main(int argc, char *argv[])
     compute_avg_speedup(csr_speedup_values, REPETITIONS, &par_avg_speedup);
     compute_avg_speedup(csr2_speedup_values, REPETITIONS, &csr2_avg_speedup);
     compute_avg_speedup(csr3_speedup_values, REPETITIONS, &csr3_avg_speedup);
+    
 
     // Write results to file to be plotted later
     FILE *fptr;
 
-    char filename[64] = "to_plot/";
-    strcat(filename, argv[1]);
+    char filename[96] = "./results/to_plot/";
+    char filename_part[32] = "";
+    strcat(filename_part, argv[1]);
+    // Remove path from filename
+    char *base_filename = strrchr(filename_part, '/');
+    if (base_filename != NULL) {
+        base_filename++; // Move past the '/'
+    } else {
+        base_filename = filename_part; // No path, use the whole string
+    }
+    strcat(filename, base_filename);
     strcat(filename, "_results.txt");
 
+    
     fptr = fopen(filename, "w");
+    
 
     char print[33] = "";
     snprintf (print, 10, "%4.6f", par_avg_speedup);
@@ -457,15 +469,12 @@ int main(int argc, char *argv[])
     strcat(print, tmp);
     strcat(print, "\n");
 
-
     fprintf(fptr, print);
 
     fclose(fptr);
+    
 
 
 
-
-
-
-	return 0;
+	  return 0;
 }
