@@ -1,23 +1,31 @@
 # PARCO-Computing-2026-242734
 # SpMV through CSR-K method
 
+## Author
+[Sandrini Leonardo] (https://github.com/Suge42)
+
 ## Usage
+
+The C compiler used is gcc-9.10.0.
+Every script must be run from the main folder, with the subfolder `scripts/` explicitly written.
+
 ### Single execution on cluster
 
-To run the code using the `.pbs` file;
-The arguments for the program must be passed through the `-v` flag to have them as ambient variables;
+To run the code using the `.pbs` file.
+The arguments for the program must be passed through the `-v` flag to have them as ambient variables.
 Useful to check the results of a single matrix and to try different numbers of threads.
 ```
-    qsub -q short_cpuQ -v MATRIX_FILE="[matrix_file_address]",N_THREADS="[number_of_threads] ./del1_single_matrix.pbs
+    qsub -q short_cpuQ -v MATRIX_FILE="[matrix_file_address]",N_THREADS="[number_of_threads] ./scripts/del1_single_matrix.pbs
 ```
 
 ### Multiple executions on cluster
 
-This `.pbs` file has fixed files and number of threads;
+This `.pbs` file has fixed files and number of threads.
 It runs the code on 5 different matrix, with the objective of easily collect batch data, also useful to quickly obtain plotting data.
+This script uses 4 threads, since they proved to be the most efficient quantity for this method.
 
 ```
-    qsub -q short_cpuQ ./del1_multiple_matrixes.pbs
+    qsub -q short_cpuQ ./scripts/del1_multiple_matrixes.pbs
 ```
 
 ### Data plotting
@@ -26,15 +34,20 @@ The `plotter.py` Python script can be executed outside the cluster with the "to_
 It's tailor made to use all the matrixes, and won't work without any of their results.
 
 ```
-    py plotter.py
+    py ./scripts/plotter.py
 ```
 
-## Additional usage
+## Additional Usage
 ### Single execution
 
 The `deliverable1.c` can be manually compiled and run.
 
 ```
-    gcc -O3 -fopenmp deliverable1.c -o del1
+    gcc -O3 -fopenmp ./src/deliverable1.c -o del1
     ./del1 [matrix_file_address] [number_of_threads]
 ```
+## Input and Output Info
+
+The inputs used for this project are different `matrix markets`, with filename `.mtx`; These matrixes are contained in the `src` folder, togheter with the C code.
+
+The outputs are generated inside the `results` folder; They're divided in the `.out` and `.err` files which are the main scripts outputs, and the `to_plot` folder containing data used by the Python plotter script.
