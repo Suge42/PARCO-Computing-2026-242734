@@ -7,8 +7,7 @@
 To run the code using the `.pbs` file;
 Useful to check the results of a single matrix and to try different numbers of threads.
 ```
-    qsub -q short_cpuQ -v MATRIX_FILE="[matrix_file_address]",N_THREADS="[number_of_threads]
-    ./del1_single_matrix.pbs
+    qsub -q short_cpuQ -v MATRIX_FILE="[matrix_file_address]",N_THREADS="[number_of_threads] ./del1_single_matrix.pbs
 ```
 
 ### Multiple executions on cluster
@@ -17,8 +16,7 @@ This `.pbs` file has fixed files and number of threads;
 It runs the code on 5 different matrix, with the objective of easily collect batch data, also useful to quickly obtain plotting data.
 
 ```
-    qsub -q short_cpuQ
-    ./delq_multiple_matrixes.pbs
+    qsub -q short_cpuQ ./del1_multiple_matrixes.pbs
 ```
 
 ### Data plotting
