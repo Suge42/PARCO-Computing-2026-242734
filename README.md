@@ -50,4 +50,4 @@ The `deliverable1.c` can be manually compiled and run.
 
 The inputs used for this project are different `matrix markets`, with filename `.mtx`; These matrixes are contained in the `src` folder, togheter with the C code.
 
-The outputs are generated inside the `results` folder; They're divided in the `.out` and `.err` files which are the main scripts outputs, and the `to_plot` folder containing data used by the Python plotter script.
+The outputs are generated inside the `results` folder; They're divided in the `.out` and `.err` files which are the main scripts outputs, and the `to_plot` folder. It contains data used by the Python plotter script, consisting of the averages for each on the 3 type of parallel execution for the specified matrix.
