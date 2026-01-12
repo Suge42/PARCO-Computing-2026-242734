@@ -1,0 +1,253 @@
+#include <stdbool.h>
+#include <stdio.h>
+#include "mmio.h"
+#include "mmio.c"
+#include "bubblesort.c"
+
+bool check_matrix(char *filename, int *M, int *N, int *nz) {
+    FILE *f;
+    MM_typecode matcode;
+    int ret_code;
+
+    if ((f = fopen(filename, "r")) == NULL) {
+        fprintf(stderr, "Could not open file: %s\n", filename);
+        fflush(stderr);
+        return false;
+    }
+
+    if (mm_read_banner(f, &matcode) != 0) {
+        fprintf(stderr, "Could not process Matrix Market banner.\n");
+        fflush(stderr);
+        return false;
+    }
+
+    /*  This is how one can screen matrix types if their application */
+    /*  only supports a subset of the Matrix Market data types.      */
+    if (mm_is_complex(matcode) && mm_is_matrix(matcode) && mm_is_sparse(matcode)){
+        fprintf(stderr, "Sorry, this application does not support ");
+        fprintf(stderr, "Market Market type: [%s]\n", mm_typecode_to_str(matcode));
+        fflush(stderr);
+        return false;
+    }
+
+    if ((ret_code = mm_read_mtx_crd_size(f, M, N, nz)) !=0) {
+        fprintf(stderr, "Error reading matrix size.\n");
+        fflush(stderr);
+        return false;
+    }
+
+    return true;
+}
+
+
+bool matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
+    FILE *f;
+    MM_typecode matcode;
+    int ret_code;
+    int M; // Number of rows
+    int N; // Number of columns
+    int nz; // Total number of non-zero entries
+    int *I, *J;
+
+    /* Simpler checks repeat, to ensure the file is correct */
+    if ((f = fopen(filename, "r")) == NULL) {
+        printf("Could not open file: %s\n", filename);
+        fflush(stdout);
+        return false;
+    }
+
+    if (mm_read_banner(f, &matcode) != 0) {
+        printf("Could not process Matrix Market banner.\n");
+        fflush(stdout);
+        return false;
+    }
+
+    if (mm_is_complex(matcode) && mm_is_matrix(matcode) && mm_is_sparse(matcode)){
+        printf("Sorry, this application does not support ");
+        fflush(stdout);
+        return false;
+    }
+
+
+    /* find out size of sparse matrix .... */
+    if ((ret_code = mm_read_mtx_crd_size(f, &M, &N, &nz)) !=0) {
+        printf("Error reading matrix size.\n");
+        fflush(stdout);
+        return false;
+    }
+
+    /* reseve memory for matrices */
+    I = (int *) malloc(nz * sizeof(int)); // Rows pointer
+    J = (int *) malloc(nz * sizeof(int)); // Columns pointer
+    *vals = (double *) malloc(nz * sizeof(double)); // Values pointer
+    
+
+    /* Reading the actual matrix data */
+    for (int i=0; i<nz; i++) {
+        fscanf(f, "%d %d %lf\n", &I[i], &J[i], &(*vals)[i]);
+        I[i]--;  // adjust from 1-based to 0-based
+        J[i]--;
+    }
+
+    if (f != stdin) {
+        fclose(f);
+    }
+
+    // Print the matrix
+    /*mm_write_banner(stdout, matcode);
+    mm_write_mtx_crd_size(stdout, M, N, nz);
+    for (i=0; i<nz; i++) {
+        fprintf(stdout, "%d %d %20.19g\n", I[i]+1, J[i]+1, val[i]);
+        if (I[i] > 5)
+            return 0;
+    }*/
+    // rows - colums - value
+    // COO ordered by columns
+
+
+    // Sort by row indices
+    bubbleSort(I, J, *vals, nz);
+    free(J); // We don't need J anymore, we only work on rows and values
+    
+    //Conversion from COO to CSR
+    int index = 0;
+    int current_row = 0;
+    *row_ptr = (int *) malloc((M+1) * sizeof(int));
+    (*row_ptr)[0] = 0;
+    (*row_ptr)[1] = 0; // This is enough to initialie the array;
+
+    while (index < nz && current_row < M) {
+        if (I[index] == current_row) {
+            // If I have an element in the current row, increment the row pointer
+            (*row_ptr)[current_row+1]++;
+
+            // I only increase the index if I have found an element in the new row;
+            // Otherwise, I keep the same index to check with the next row value;
+            index++;
+        } else {
+            // If the element is not in the current row, I move to the next
+            // and copy the starting value from the previous one;
+            current_row++;
+            (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
+        }
+    }
+
+    // Print matrix in CSR format
+    /*printf("CSR Row pointer:\n");
+    for (i=0; i<=M; i++) {
+        printf("Row %d: %d\n", i, a_row[i]);
+    }*/
+
+    return true;
+}
+
+
+bool matrix_to_csr_partial(char *filename, int start_row, int end_row, int *local_nz, int **row_ptr, double **vals) {
+    // Similar implementation as matrix_to_csr_total but only for rows in [start_row, end_row)
+
+    FILE *f;
+    MM_typecode matcode;
+    int ret_code;
+    int M; // Number of rows
+    int N; // Number of columns
+    int nz; // Total number of non-zero entries
+    int *local_I, *local_J;
+    int local_M = end_row - start_row;
+
+    /* Simpler checks repeat, to ensure the file is correct */
+    if ((f = fopen(filename, "r")) == NULL) {
+        return false;
+    }
+
+    /* Skip the header lines */
+    char line[256];
+    while (fgets(line, sizeof(line), f) != NULL) {
+        // Just skip to the end of the header
+        if (line[0] == '%') {
+            continue;
+        }
+        // Found the first data line
+        if (sscanf(line, "%d %d %d", &M, &N, &nz) == 3) {
+            break;
+        }
+    }
+
+    // Save file position after header
+    long data_start_pos = ftell(f);
+
+    /* Count elements in the specified row range */
+    *local_nz = 0;
+    
+    for (int i=0; i<nz; i++) {
+        int row_tmp, col_tmp;
+        double value;
+        fscanf(f, "%d %d %lf\n", &row_tmp, &col_tmp, &value);
+        row_tmp--;  // adjust from 1-based to 0-based
+        if (row_tmp >= start_row && row_tmp < end_row) {
+            (*local_nz)++;
+        }
+        // Since the file is in column-major order, we can't stop early
+    }
+
+
+    /* reseve memory for matrices */
+    local_I = (int *) malloc((*local_nz) * sizeof(int)); // Rows pointer
+    local_J = (int *) malloc((*local_nz) * sizeof(int)); // Columns pointer
+    *vals = (double *) malloc((*local_nz) * sizeof(double)); // Values pointer
+
+
+    /* Reading the actual matrix data */
+    fseek(f, data_start_pos, SEEK_SET); // Reset file position to start reading data
+    int index = 0;
+    while (index < *local_nz && !feof(f)) {
+        int row_tmp, col_tmp;
+        double value;
+        fscanf(f, "%d %d %lf\n", &row_tmp, &col_tmp, &value);
+        row_tmp--;  // adjust from 1-based to 0-based
+        col_tmp--;
+        // Save only if in the specified row range
+        if (row_tmp >= start_row && row_tmp < end_row) {
+            local_I[index] = row_tmp - start_row; // Adjust row index for local CSR
+            local_J[index] = col_tmp;
+            (*vals)[index] = value;
+            index++;
+        }
+        // Since the file is in column-major order, we can't stop early
+    }
+
+    if (f != stdin) {
+        fclose(f);
+    }
+
+    // Sort by row indices
+    bubbleSort(local_I, local_J, *vals, *local_nz);
+    free(local_J); // We don't need J anymore, we only work on rows and values
+
+
+    //Conversion from COO to CSR
+    index = 0;
+    int current_row = 0;
+    *row_ptr = (int *) malloc((local_M+1) * sizeof(int));
+    (*row_ptr)[0] = 0;
+    (*row_ptr)[1] = 0; // This is enough to initialie the array;
+
+    while (index < *local_nz && current_row < local_M) {
+        if (local_I[index] == current_row) {
+            // If I have an element in the current row, increment the row pointer
+            (*row_ptr)[current_row+1]++;
+
+            // I only increase the index if I have found an element in the new row;
+            // Otherwise, I keep the same index to check with the next row value;
+            index++;
+        } else {
+            // If the element is not in the current row, I move to the next
+            // and copy the starting value from the previous one;
+            current_row++;
+            (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
+        }
+    }
+
+    free(local_I);
+
+    return true;
+}
