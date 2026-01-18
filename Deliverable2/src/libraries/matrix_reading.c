@@ -4,7 +4,7 @@
 #include "mmio.c"
 #include "bubblesort.c"
 
-bool check_matrix(char *filename, int *M, int *N, int *nz) {
+bool check_matrix_file(char *filename, int *M, int *N, int *nz) {
     FILE *f;
     MM_typecode matcode;
     int ret_code;
@@ -36,11 +36,15 @@ bool check_matrix(char *filename, int *M, int *N, int *nz) {
         return false;
     }
 
+    if (f != stdin) {
+        fclose(f);
+    }
+
     return true;
 }
 
 
-bool matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
+bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     FILE *f;
     MM_typecode matcode;
     int ret_code;
@@ -116,20 +120,27 @@ bool matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     (*row_ptr)[0] = 0;
     (*row_ptr)[1] = 0; // This is enough to initialie the array;
 
-    while (index < nz && current_row < M) {
-        if (I[index] == current_row) {
-            // If I have an element in the current row, increment the row pointer
-            (*row_ptr)[current_row+1]++;
+    while (current_row < M) {
+        if (index < nz) {
+            if (I[index] == current_row) {
+                // If I have an element in the current row, increment the row pointer
+                (*row_ptr)[current_row+1]++;
 
-            // I only increase the index if I have found an element in the new row;
-            // Otherwise, I keep the same index to check with the next row value;
-            index++;
+                // I only increase the index if I have found an element in the new row;
+                // Otherwise, I keep the same index to check with the next row value;
+                index++;
+            } else {
+                // If the element is not in the current row, I move to the next
+                // and copy the starting value from the previous one;
+                current_row++;
+                (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
+            }
         } else {
-            // If the element is not in the current row, I move to the next
-            // and copy the starting value from the previous one;
+            // If I finish the elements because the last rows are empty, I still
+            // Need to fill them
             current_row++;
             (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
-        }
+        }  
     }
 
     // Print matrix in CSR format
@@ -142,7 +153,7 @@ bool matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
 }
 
 
-bool matrix_to_csr_partial(char *filename, int start_row, int end_row, int *local_nz, int **row_ptr, double **vals) {
+bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int *local_nz, int **row_ptr, double **vals) {
     // Similar implementation as matrix_to_csr_total but only for rows in [start_row, end_row)
 
     FILE *f;
@@ -231,17 +242,24 @@ bool matrix_to_csr_partial(char *filename, int start_row, int end_row, int *loca
     (*row_ptr)[0] = 0;
     (*row_ptr)[1] = 0; // This is enough to initialie the array;
 
-    while (index < *local_nz && current_row < local_M) {
-        if (local_I[index] == current_row) {
-            // If I have an element in the current row, increment the row pointer
-            (*row_ptr)[current_row+1]++;
+    while ( current_row < local_M) {
+        if (index < *local_nz) {
+            if (local_I[index] == current_row) {
+                // If I have an element in the current row, increment the row pointer
+                (*row_ptr)[current_row+1]++;
 
-            // I only increase the index if I have found an element in the new row;
-            // Otherwise, I keep the same index to check with the next row value;
-            index++;
+                // I only increase the index if I have found an element in the new row;
+                // Otherwise, I keep the same index to check with the next row value;
+                index++;
+            } else {
+                // If the element is not in the current row, I move to the next
+                // and copy the starting value from the previous one;
+                current_row++;
+                (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
+            }
         } else {
-            // If the element is not in the current row, I move to the next
-            // and copy the starting value from the previous one;
+            // If I finish the elements because the last rows are empty, I still
+            // Need to fill them
             current_row++;
             (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
         }

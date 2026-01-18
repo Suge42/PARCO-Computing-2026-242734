@@ -4,17 +4,22 @@
 #include <string.h>
 #include "libraries/matrix_reading.c"
 #include "libraries/SpMV.c"
+#include "libraries/data_management.c"
 #include <mpi.h>
 
 int main(int argc, char *argv[]) {
     int rank, size, processes, num_iterations;
     MPI_Status status;
     char filename[256] = "";
+    char result_filename[256] = "";
 
     int *row_ptr;
     double *vals, *vector, *results;
-    srand(42);
-    //srand(time(NULL));
+    int M; // Number of rows
+    int N; // Number of columns
+    int nz; // Total number of non-zero entries
+    //srand(42); // For debugging purposes
+    srand(time(NULL));
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -32,7 +37,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Check the right amount of argument and open the file */
-    if (argc != 3) { // PROBABLY NEEDS TO BE CHANGED
+    if (argc != 4) {
         if (rank == 0) {
             fprintf(stderr, "Intended usage: %s [martix-market-filename] [number-of-threads]\n", argv[0]);
             fflush(stderr);
@@ -41,7 +46,11 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
+    strcpy(result_filename, argv[3]); // File to store results
+
     num_iterations = atoi(argv[2]); // Number of times to repeat the sending process for averaging
+    
+    /* Allocating memory */
     double t_start, t_end;
     double *computation_time = malloc(num_iterations * sizeof(double));
     double *communication_time = malloc(num_iterations * sizeof(double));
@@ -54,14 +63,11 @@ int main(int argc, char *argv[]) {
 
     for (int iter = 0; iter < num_iterations; iter++) {
         if (rank == 0) {
-            int M; // Number of rows
-            int N; // Number of columns
-            int nz; // Total number of non-zero entries
                     
             strncpy(filename, argv[1], 256); // Copy the filename to a local variable
 
             /* Initial checks on the matrix */
-            printf("Process %d is checking the matrix: %s\n", rank, filename);
+            printf("Iteration: %d - Process %d is checking the matrix: %s\n", iter+1, rank, filename);
             fflush(stdout);
             if (!check_matrix(filename, &M, &N, &nz)) {
                 MPI_Abort(MPI_COMM_WORLD, 1);
@@ -69,7 +75,7 @@ int main(int argc, char *argv[]) {
 
             /* Give the filename to other processes */
             t_start = MPI_Wtime();
-            printf("Process %d is broadcasting the filename to other processes.\n", rank);
+            printf("Iteration: %d - Process %d is broadcasting the filename to other processes.\n", iter+1, rank);
             fflush(stdout);
             MPI_Bcast(&filename, 256, MPI_CHAR, 0, MPI_COMM_WORLD);
             t_end = MPI_Wtime();
@@ -98,7 +104,7 @@ int main(int argc, char *argv[]) {
 
             /* Send the rows distribution to all processes */
             t_start = MPI_Wtime();
-            printf("Process %d is sending rows distribution to other processes.\n", rank);
+            printf("Iteration: %d - Process %d is sending rows distribution to other processes.\n", iter+1, rank);
             fflush(stdout);
             for (int i = 0; i < processes; i++) {
                 MPI_Send(&rows_distribution[i], 1, MPI_INT, i+1, 0, MPI_COMM_WORLD); // Start row
@@ -117,7 +123,7 @@ int main(int argc, char *argv[]) {
 
             /* Send the right part of the vector to all processes */
             t_start = MPI_Wtime();
-            printf("Process %d is sending parts of the vector to other processes.\n", rank);
+            printf("Iteration: %d - Process %d is sending parts of the vector to other processes.\n", iter+1, rank);
             fflush(stdout);
             for (int i = 0; i < processes; i++) {
                 int start_row = rows_distribution[i];
@@ -129,8 +135,7 @@ int main(int argc, char *argv[]) {
 
 
             MPI_Barrier(MPI_COMM_WORLD);
-            double local_start = MPI_Wtime();
-            printf("Computation started.\n");
+            printf("Iteration: %d - Computation started.\n", iter+1);
             fflush(stdout);
 
             /* Allocate memory for results */
@@ -143,7 +148,7 @@ int main(int argc, char *argv[]) {
             vals = (double *) malloc(nz * sizeof(double));
 
             /* Read the matrix into CSR format */
-            if (!matrix_to_csr_total(filename, &row_ptr, &vals)) {
+            if (!read_matrix_to_csr_total(filename, &row_ptr, &vals)) {
                 fprintf(stderr, "Process 0 failed reading the whole matrix: %s\n", filename);
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
@@ -159,6 +164,7 @@ int main(int argc, char *argv[]) {
 
 
             /* Compute the SpMV result */
+            double local_start = MPI_Wtime();
             SpMV_csr(M, row_ptr, vals, vector, local_results);
             double local_end = MPI_Wtime();
             not_par_computation_time[iter] = local_end - local_start;
@@ -199,9 +205,9 @@ int main(int argc, char *argv[]) {
             //printf("Process %d is checking results correctness:\n", rank);
             //fflush(stdout);
             if (check_results(local_results, results, M)) {
-                printf("\tResults are correct for MPI parallelization.\n");
+                printf("\tIteration: %d - Results are correct for MPI parallelization.\n", iter+1);
             } else {
-                printf("\tResults are NOT correct for MPI parallelization.\n");
+                printf("\tIteration: %d - Results are NOT correct for MPI parallelization.\n", iter+1);
             }
 
             /* Receive computation time from processes */
@@ -241,14 +247,13 @@ int main(int argc, char *argv[]) {
 
             // Wait for all processes to be ready, then start timing
             MPI_Barrier(MPI_COMM_WORLD);
-            t_start = MPI_Wtime();
 
             /* Receive result vector to fill */
             results = (double *) malloc(local_M * sizeof(double));
             //MPI_Recv(results, local_M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
 
-            int local_nz;
-            if (!matrix_to_csr_partial(filename, start_row, end_row, &local_nz, &row_ptr, &vals)) {
+
+            if (!read_matrix_to_csr_partial(filename, start_row, end_row, &nz, &row_ptr, &vals)) {
                 fprintf(stderr, "Process %d failed reading its part of the matrix: %s\n", rank, filename);
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
@@ -258,14 +263,15 @@ int main(int argc, char *argv[]) {
             
             /* Printf matrix rows and values */
             //printf("Process %d CSR Row pointer:\n", rank);
-            /*for (int i=0; i<local_nz; i++) {
+            /*for (int i=0; i<nz; i++) {
                 printf("Rank: %d - Val %d: %f\n", rank, i, vals[i]);
             }
             fflush(stdout);*/
 
             /* Compute the SpMV result */
-            printf("Process %d is computing its SpMV part.\n", rank);
-            fflush(stdout);
+            t_start = MPI_Wtime();
+            //printf("Process %d is computing its SpMV part.\n", rank);
+            //fflush(stdout);
             SpMV_csr(local_M, row_ptr, vals, vector, results);
 
             /* Print result vector */
@@ -300,18 +306,14 @@ int main(int argc, char *argv[]) {
     if (rank == 0) {
         double comp_time = 0.0;
         double comm_time = 0.0;
-        double total_time = 0.0;
         double not_par_comp_time = 0.0;
-        for (int iter = 0; iter < num_iterations; iter++) {
-            comp_time += computation_time[iter];
-            comm_time += communication_time[iter];
-            total_time += (computation_time[iter] + communication_time[iter]);
-            not_par_comp_time += not_par_computation_time[iter];
-        }
-        comp_time /= num_iterations; // Average over iterations
-        comm_time /= num_iterations; 
-        total_time /= num_iterations; 
-        not_par_comp_time /= num_iterations; 
+
+        remove_outlier(num_iterations, computation_time, &comp_time);
+        remove_outlier(num_iterations, communication_time, &comm_time);
+        remove_outlier(num_iterations, not_par_computation_time, &not_par_comp_time);
+        
+        double total_time = comp_time + comm_time;
+        
         double avg_comp_time = comp_time / processes; // Average per process
         double avg_comm_time = comm_time / processes;
         double avg_total_time = total_time / processes;
@@ -329,7 +331,24 @@ int main(int argc, char *argv[]) {
         printf("=-=\n");
         printf("Unparallelized computation time: %f seconds.\n", not_par_comp_time);
         printf("Speedup achieved: %f\n", speedup);
+        printf("=-=\n\n");
         fflush(stdout);
+
+        /* Write results to file */
+        FILE *f;
+        if ((f = fopen(result_filename, "a")) == NULL) {
+            fprintf(stderr, "Could not open file: %s\n", result_filename);
+            fflush(stderr);
+            return false;
+        }
+        fprintf(f, "#Matrix: %s - Row: %d - Columns: %d - Working_processes: %d\n", filename, M, N, processes);
+        fprintf(f, "avg_comp_time: %f\n", avg_comp_time);
+        fprintf(f, "avg_comm_time: %f\n", avg_comm_time);
+        fprintf(f, "avg_total_time: %f\n", avg_total_time);
+        fprintf(f, "not_par_comp_time: %f\n", not_par_comp_time);
+        fprintf(f, "speedup: %f\n", speedup);
+        fflush(f);
+        fclose(f);
     }
     
 
