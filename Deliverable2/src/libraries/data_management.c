@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "data_management.h"
 
 double compute_avg(int num_iterations, double *time) {
     double avg = 0.0;
@@ -12,6 +13,7 @@ double compute_avg(int num_iterations, double *time) {
 
     return avg;
 }
+
 int find_outlier(int num_iterations, double *time, double avg) {
     int outlier_index = 0;
     double max_deviation = fabs(time[0] - avg); // By default is the first
@@ -44,4 +46,17 @@ void remove_outlier(int num_iterations, double *time, double *avg_time) {
         }
     }
     *avg_time = *avg_time / (num_iterations-1); // Average over iterations
+}
+
+int find_max_M(int *row_dist, int processes) {
+    int max_M = row_dist[1] - row_dist[0]; // Initial assumption
+
+    for (int i = 1; i < processes; i++) {
+        int local_M = row_dist[i+1] - row_dist[i];
+        if (local_M > max_M) {
+            max_M = local_M;
+        }
+    }
+
+    return max_M;
 }

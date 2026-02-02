@@ -1,8 +1,8 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include "matrix_reading.h"
 #include "mmio.h"
-#include "mmio.c"
-#include "bubblesort.c"
+#include "bubblesort.h"
 
 bool check_matrix_file(char *filename, int *M, int *N, int *nz) {
     FILE *f;
@@ -51,32 +51,32 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     int M; // Number of rows
     int N; // Number of columns
     int nz; // Total number of non-zero entries
-    int *I, *J;
+    int *I = NULL, *J = NULL;
 
     /* Simpler checks repeat, to ensure the file is correct */
     if ((f = fopen(filename, "r")) == NULL) {
-        printf("Could not open file: %s\n", filename);
-        fflush(stdout);
+        fprintf(stderr, "Could not open file: %s\n", filename);
+        fflush(stderr);
         return false;
     }
 
     if (mm_read_banner(f, &matcode) != 0) {
-        printf("Could not process Matrix Market banner.\n");
-        fflush(stdout);
+        fprintf(stderr, "Could not process Matrix Market banner.\n");
+        fflush(stderr);
         return false;
     }
 
     if (mm_is_complex(matcode) && mm_is_matrix(matcode) && mm_is_sparse(matcode)){
-        printf("Sorry, this application does not support ");
-        fflush(stdout);
+        fprintf(stderr, "Sorry, this application does not support complex matrices.\n");
+        fflush(stderr);
         return false;
     }
 
 
     /* find out size of sparse matrix .... */
     if ((ret_code = mm_read_mtx_crd_size(f, &M, &N, &nz)) !=0) {
-        printf("Error reading matrix size.\n");
-        fflush(stdout);
+        fprintf(stderr, "Error reading matrix size.\n");
+        fflush(stderr);
         return false;
     }
 
@@ -84,6 +84,11 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     I = (int *) malloc(nz * sizeof(int)); // Rows pointer
     J = (int *) malloc(nz * sizeof(int)); // Columns pointer
     *vals = (double *) malloc(nz * sizeof(double)); // Values pointer
+    if (!I || !J || !(*vals)) {
+        fprintf(stderr, "Failed to allocate memory for matrix data.\n");
+        fflush(stderr);
+        return false;
+    }
     
 
     /* Reading the actual matrix data */
@@ -117,6 +122,12 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     int index = 0;
     int current_row = 0;
     *row_ptr = (int *) malloc((M+1) * sizeof(int));
+    if (!(*row_ptr)) {
+        fprintf(stderr, "Allocation failed. Needed ~%zu MB for COO format alone.\n",
+                ((M+1 * sizeof(int))) / (1024 * 1024));
+        fflush(stderr);
+        return false;
+    }
     (*row_ptr)[0] = 0;
     (*row_ptr)[1] = 0; // This is enough to initialie the array;
 
@@ -149,6 +160,8 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
         printf("Row %d: %d\n", i, a_row[i]);
     }*/
 
+    free(I);
+
     return true;
 }
 
@@ -162,7 +175,7 @@ bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int 
     int M; // Number of rows
     int N; // Number of columns
     int nz; // Total number of non-zero entries
-    int *local_I, *local_J;
+    int *local_I = NULL, *local_J = NULL;
     int local_M = end_row - start_row;
 
     /* Simpler checks repeat, to ensure the file is correct */
@@ -205,6 +218,11 @@ bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int 
     local_I = (int *) malloc((*local_nz) * sizeof(int)); // Rows pointer
     local_J = (int *) malloc((*local_nz) * sizeof(int)); // Columns pointer
     *vals = (double *) malloc((*local_nz) * sizeof(double)); // Values pointer
+    if (!local_I || !local_J || !(*vals)) {
+        fprintf(stderr, "Failed to allocate memory for local matrix data.\n");
+        fflush(stderr);
+        return false;
+    }
 
 
     /* Reading the actual matrix data */
@@ -239,6 +257,12 @@ bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int 
     index = 0;
     int current_row = 0;
     *row_ptr = (int *) malloc((local_M+1) * sizeof(int));
+    if (!(*row_ptr)) {
+        fprintf(stderr, "Allocation failed. Needed ~%zu MB for COO format alone.\n",
+                ((local_M+1 * sizeof(int))) / (1024 * 1024));
+        fflush(stderr);
+        return false;
+    }
     (*row_ptr)[0] = 0;
     (*row_ptr)[1] = 0; // This is enough to initialie the array;
 

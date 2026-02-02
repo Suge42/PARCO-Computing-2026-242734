@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
+#include "SpMV.h"
 
 void SpMV_csr(int M, int *row_ptr, double *vals, double *vector, double *result) {
     for (int i = 0; i < M; i++) { // Go through each row

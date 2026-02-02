@@ -1,0 +1,54 @@
+#!/bin/bash
+# Job name
+#PBS -N del2
+# Output files
+#PBS -o ./results/del2_r.out
+#PBS -e ./results/del2_r.err
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#PBS -l walltime=0:15:00
+# Number of nodes, cpus, mpi processors and amount of memory
+#PBS -l select=4:ncpus=12:mpiprocs=12:mem=8gb
+
+
+# Test a single matrix, choosing file from the command line
+if [[ -z $MATRIX_FILE ]]; then
+  echo "Missing matrix file" >&2
+  exit 1
+fi
+
+RESULT_FILE="results/to_plot/del2_r.txt"
+
+
+# Modules for python and MPI
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+
+# Select the working directory 
+#cd Deliverable2
+cd "$PBS_O_WORKDIR"
+
+echo "Working directory: $(pwd)"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+
+# Compile the code
+mpicc ./src/execute_mpi_reading.c -o del2_r
+#mpicxx code_mpi.cpp -o code.out
+
+# Remove previous results
+if [ -f "$RESULT_FILE" ]; then
+    rm "$RESULT_FILE"
+fi
+
+# Run the code
+mpirun -np 3 ./del2_r "$MATRIX_FILE" 10 "$RESULT_FILE"
+mpirun -np 5 ./del2_r "$MATRIX_FILE" 10 "$RESULT_FILE"
+mpirun -np 9 ./del2_r "$MATRIX_FILE" 10 "$RESULT_FILE"
+
+rm ./del2_r
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Execution completed"

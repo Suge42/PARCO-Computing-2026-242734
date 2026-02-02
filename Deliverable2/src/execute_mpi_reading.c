@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include "libraries/matrix_reading.c"
-#include "libraries/SpMV.c"
-#include "libraries/data_management.c"
+#include "libraries/SpMV.h"
+#include "libraries/data_management.h"
+#include "libraries/matrix_reading.h"
 #include <mpi.h>
 
 int main(int argc, char *argv[]) {
@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
     char filename[256] = "";
     char result_filename[256] = "";
 
-    int *row_ptr;
-    double *vals, *vector, *results;
+    int *row_ptr = NULL; // Initialize pointers to avoid problems with free()
+    double *vals = NULL, *vector = NULL, *results = NULL;
     int M; // Number of rows
     int N; // Number of columns
     int nz; // Total number of non-zero entries
@@ -55,6 +55,11 @@ int main(int argc, char *argv[]) {
     double *computation_time = malloc(num_iterations * sizeof(double));
     double *communication_time = malloc(num_iterations * sizeof(double));
     double *not_par_computation_time = malloc(num_iterations * sizeof(double));
+    if (!computation_time || !communication_time || !not_par_computation_time) {
+        fprintf(stderr, "Process %d failed to allocate memory for timing arrays\n", rank);
+        fflush(stderr);
+        MPI_Abort(MPI_COMM_WORLD, 1);
+    }
     for (int i = 0; i < num_iterations; i++) {
         computation_time[i] = 0.0;
         communication_time[i] = 0.0;
@@ -69,7 +74,7 @@ int main(int argc, char *argv[]) {
             /* Initial checks on the matrix */
             printf("Iteration: %d - Process %d is checking the matrix: %s\n", iter+1, rank, filename);
             fflush(stdout);
-            if (!check_matrix(filename, &M, &N, &nz)) {
+            if (!check_matrix_file(filename, &M, &N, &nz)) {
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
 
@@ -87,6 +92,11 @@ int main(int argc, char *argv[]) {
             int remaining_rows = M % processes;
 
             int *rows_distribution = (int *) malloc(size * sizeof(int));
+            if (!rows_distribution) {
+                fprintf(stderr, "Iteration: %d - Process %d failed to allocate memory for rows distribution\n", iter+1, rank);
+                fflush(stderr);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
             rows_distribution[0] = 0; // Rank 0 does not process rows
 
             for (int i = 0; i < processes; i++) {
@@ -116,8 +126,13 @@ int main(int argc, char *argv[]) {
             
             /* Create vector of size M */
             vector = (double *) malloc(M * sizeof(double));
+            if (!vector) {
+                fprintf(stderr, "Iteration: %d - Process %d failed to allocate memory for random vector\n", iter+1, rank);
+                fflush(stderr);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
             for (int i = 0; i < M; i++) {
-                vector[i] = (rand() % 9) +1; // Initialize all elements to 1.0
+                vector[i] = (rand() % 9) + 1; // Initialize all elements to 1.0
             }
 
 
@@ -141,11 +156,12 @@ int main(int argc, char *argv[]) {
             /* Allocate memory for results */
             results = (double *) malloc(M * sizeof(double));
             double *local_results = (double *) malloc(M * sizeof(double)); // Max size needed for rank 0
+            if (!local_results || !results) {
+                fprintf(stderr, "Iteration: %d - Process %d failed to allocate memory for results\n", iter+1, rank);
+                fflush(stderr);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
             
-
-            /* Allocate memory */
-            row_ptr = (int *) malloc((M+1) * sizeof(int));
-            vals = (double *) malloc(nz * sizeof(double));
 
             /* Read the matrix into CSR format */
             if (!read_matrix_to_csr_total(filename, &row_ptr, &vals)) {
@@ -154,7 +170,7 @@ int main(int argc, char *argv[]) {
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
 
-            /* Printf matrix rows and values */
+            /* Print matrix rows and values */
             /*printf("Process 0 CSR Row pointer:\n");
             fflush(stdout);
             for (int i=0; i<nz; i++) {
@@ -169,19 +185,30 @@ int main(int argc, char *argv[]) {
             double local_end = MPI_Wtime();
             not_par_computation_time[iter] = local_end - local_start;
 
+
             /* Receive back results from all processes */
             t_start = MPI_Wtime();
+            
+            int max_M = find_max_M(rows_distribution, processes);
+            double *temp_buffer = (double *) malloc(max_M * sizeof(double));
+            if (!temp_buffer) {
+                fprintf(stderr, "Iteration: %d - Process %d failed to allocate memory for temp buffer while receiving back results\n", iter+1, rank);
+                fflush(stderr);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
+
             for (int i = 0; i < processes; i++) {
                 int start_row = rows_distribution[i];
                 int local_M = rows_distribution[i+1] - start_row;
-                double *temp_buffer = (double *) malloc(local_M * sizeof(double));
                 MPI_Recv(temp_buffer, local_M, MPI_DOUBLE, i+1, 0, MPI_COMM_WORLD, &status);
                 for (int j = 0; j < local_M; j++) {
                     results[start_row + j] = temp_buffer[j];
                 }
             }
+            free(temp_buffer); // cleanup
             t_end = MPI_Wtime();
             communication_time[iter] += (t_end - t_start);
+
 
             /* Print result vector */
             /*printf("Process %d results:\n", rank);
@@ -236,6 +263,11 @@ int main(int argc, char *argv[]) {
 
             /* Receive the part of the vector from rank 0 */
             vector = (double *) malloc(local_M * sizeof(double));
+            if (!vector) {
+                fprintf(stderr, "Process %d failed to allocate memory for vector\n", rank);
+                fflush(stderr);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
             MPI_Recv(vector, local_M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
 
             /* Print received vector */
@@ -250,7 +282,11 @@ int main(int argc, char *argv[]) {
 
             /* Receive result vector to fill */
             results = (double *) malloc(local_M * sizeof(double));
-            //MPI_Recv(results, local_M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
+            if (!results) {
+                fprintf(stderr, "Process %d failed to allocate memory for results vector\n", rank);
+                fflush(stderr);
+                MPI_Abort(MPI_COMM_WORLD, 1);
+            }
 
 
             if (!read_matrix_to_csr_partial(filename, start_row, end_row, &nz, &row_ptr, &vals)) {
@@ -293,6 +329,9 @@ int main(int argc, char *argv[]) {
             // Barrier to ensure all processes finish before checking results
             MPI_Barrier(MPI_COMM_WORLD);
         }
+
+        // Barrier to ensure all processes finished using heap memory before freeing
+        MPI_Barrier(MPI_COMM_WORLD);
 
         free(row_ptr);
         free(vals);

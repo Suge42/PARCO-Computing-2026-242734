@@ -1,20 +1,21 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include "bubblesort.h"
 
-void swap(int *xp, int *yp){
+void swap(int *xp, int *yp) {
     int temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 
-void swap_double(double *xp, double *yp){
+void swap_double(double *xp, double *yp) {
     double temp = *xp;
     *xp = *yp;
     *yp = temp;
 }
 
 // An optimized version of Bubble Sort
-void bubbleSort(int *arr1, int *arr2, double *arr3, int n){
+void bubbleSort(int *arr1, int *arr2, double *arr3, int n) {
     int i, j;
     bool swapped;
     for (i = 0; i < n - 1; i++) {

@@ -1,74 +1,62 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "bubblesort.c"
+#include <stdint.h>
+#include "generator.h"
+#include "bubblesort.h"
 
-int generate_matrix(int rows, int cols, int percent_nonzero, int **I, int **J, double **vals, int *nz) {
-    if (rows <= 0 || cols <= 0 || percent_nonzero < 0 || percent_nonzero > 100) {
-        fprintf(stderr, "Invalid parameters for matrix generation.\n");
-        fflush(stderr);
+bool generate_matrix(int rows, int cols, int percent_nonzero, int **I, int **J, double **vals, int *nz) {
+    int total = rows * cols;
+    uint8_t *mask = malloc(total); // Keep track of filled positions
+    if (!mask) {
+        fprintf(stderr, "Mask allocation failed\n");
         return false;
     }
-    
-
-    int total_size = rows * cols;
-    double *matrix = malloc(total_size * sizeof(double));
-    if (!matrix) {
-        fprintf(stderr, "Allocation failed. Needed ~%zu MB for matrix alone.\n",
-                total_size * sizeof(double) / (1024 * 1024));
-        fflush(stderr);
-        return false;
-    }
-    
-
-    // Fill matrix
     int local_nz = 0;
-    for (int i = 0; i < total_size; ++i) {
+
+    /* Count non-zero elements (no need to have the real matrix in memory) */
+    for (int k = 0; k < total; ++k) {
         if ((rand() % 100) < percent_nonzero) {
-            double sign = 1.0;
-            if ((rand() % 100) < 50) {
-                sign = -1.0;
-            }
-            // Random value between -10 and 10
-            matrix[i] = sign * ((rand() % 1000) / 100.0);
-            local_nz++;
+            mask[k] = 1; // 1 if non-zero 
+            local_nz++; // Increment count if non-zero
         } else {
-            matrix[i] = 0.0;
+            mask[k] = 0; // 0 otherwise
         }
+        
     }
 
     *nz = local_nz;
-    /* Convert matrix to COO format */
-    *I = (int *) malloc((local_nz) * sizeof(int));
-    *J = (int *) malloc((local_nz) * sizeof(int));
-    *vals = (double *) malloc((local_nz) * sizeof(double));
-    if (!(*I) || !(*J) || !(*vals)) {
-        fprintf(stderr, "Allocation failed. Needed ~%zu MB for COO format alone.\n",
-                ((local_nz * sizeof(double))+(local_nz * sizeof(int) * 2)) / (1024 * 1024));
-        fflush(stderr);
-        free(matrix);
+
+    *I = malloc(local_nz * sizeof(int));
+    *J = malloc(local_nz * sizeof(int));
+    *vals = malloc(local_nz * sizeof(double));
+    if (!*I || !*J || !*vals) {
+        fprintf(stderr, "COO allocation failed\n");
         return false;
     }
-    
 
+    /* Generate COO representation */
     int index = 0;
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < cols; ++j) {
-            double value = matrix[(i * cols) + j];
-            if (value != 0.0) {
+            int k = i * cols + j;
+            if (mask[k]) {
+                // Decide the value sign randomly
+                double sign = ((rand() & 1) ? -1.0 : 1.0);
                 (*I)[index] = i;
                 (*J)[index] = j;
-                (*vals)[index] = value;
+                // Obtain values between -10.0 and 10.0
+                (*vals)[index] = sign * ((rand() % 1000) / 100.0);
                 index++;
             }
         }
     }
-    
-    free(matrix);
+
     return true;
 }
 
-int coo_to_csr(int nz, int start_row, int M, int *I, int *J, double *vals, int **row_ptr) {
+
+bool coo_to_csr(int nz, int start_row, int M, int *I, int *J, double *vals, int **row_ptr) {
     // Sort by row indices
     bubbleSort(I, J, vals, nz);
     
