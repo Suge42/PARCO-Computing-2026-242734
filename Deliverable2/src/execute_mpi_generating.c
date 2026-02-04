@@ -45,7 +45,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    strcpy(result_filename, argv[2]); // File to store results
+    snprintf(result_filename, sizeof(result_filename), "%s", argv[2]); // File to store results
+    
 
     num_iterations = atoi(argv[1]); // Number of times to repeat the sending process for averaging
     
@@ -64,6 +65,7 @@ int main(int argc, char *argv[]) {
         communication_time[i] = 0.0;
         not_par_computation_time[i] = 0.0;
     }
+
 
     /* Read matrix dimensions from command line */
     M = atoi(argv[3]); // Number of rows
@@ -253,7 +255,11 @@ int main(int argc, char *argv[]) {
                     results[start_row + j] = temp_buffer[j];
                 }
             }
-            free(temp_buffer); // cleanup
+            
+            if (temp_buffer) {
+                free(temp_buffer); // cleanup
+                temp_buffer = NULL;
+            }
             t_end = MPI_Wtime();
             communication_time[iter] += (t_end - t_start);
 
@@ -291,9 +297,18 @@ int main(int argc, char *argv[]) {
                 computation_time[iter] += proc_comp_time;
             }
 
-            free(local_results);
-            free(local_nz);
-            free(rows_distribution);
+            if (local_results) {
+                free(local_results);
+                local_results = NULL;
+            }
+            if (local_nz) {
+                free(local_nz);
+                local_nz = NULL;
+            }
+            if (rows_distribution) {
+                free(rows_distribution);
+                rows_distribution = NULL;
+            }
 
         } else {        
 
@@ -410,12 +425,30 @@ int main(int argc, char *argv[]) {
         // Barrier to ensure all processes finished using heap memory before freeing
         MPI_Barrier(MPI_COMM_WORLD);
 
-        free(I);
-        free(J);
-        free(row_ptr);
-        free(vals);
-        free(vector);
-        free(results);
+        if (I) {
+            free(I);
+            I = NULL;
+        }
+        if (J) {
+            free(J);
+            J = NULL;
+        }
+        if (row_ptr) {
+            free(row_ptr);
+            row_ptr = NULL;
+        }
+        if (vals) {
+            free(vals);
+            vals = NULL;
+        }
+        if (vector) {
+            free(vector);
+            vector = NULL;
+        }
+        if (results) {
+            free(results);
+            results = NULL;
+        }
 
         // Barrier to synchronize before next iteration
         MPI_Barrier(MPI_COMM_WORLD);
@@ -471,9 +504,11 @@ int main(int argc, char *argv[]) {
     }
     
 
+    
     free(computation_time);
     free(communication_time);
     free(not_par_computation_time);
+    
 
     MPI_Finalize();
     return 0;

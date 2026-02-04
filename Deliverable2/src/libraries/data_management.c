@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "data_management.h"
 
 double compute_avg(int num_iterations, double *time) {

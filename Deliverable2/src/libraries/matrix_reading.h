@@ -1,5 +1,5 @@
-#ifndef SPMV_H
-#define SPMV_H
+#ifndef MATRIX_READING_H
+#define MATRIX_READING_H
 
 bool check_matrix_file(char *filename, int *M, int *N, int *nz);
 bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals);

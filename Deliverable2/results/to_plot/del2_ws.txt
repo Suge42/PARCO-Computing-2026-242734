@@ -1,0 +1,42 @@
+#Matrix: 9%% scarsity - Row: 256 - Columns: 256 - Processes: 1
+avg_comp_time: 0.000005
+avg_comm_time: 0.004257
+avg_total_time: 0.004262
+not_par_comp_time: 0.000006
+speedup: 1.234973
+#Matrix: 9%% scarsity - Row: 512 - Columns: 512 - Processes: 2
+avg_comp_time: 0.000010
+avg_comm_time: 0.012099
+avg_total_time: 0.012109
+not_par_comp_time: 0.000021
+speedup: 2.225275
+#Matrix: 9%% scarsity - Row: 1024 - Columns: 1024 - Processes: 4
+avg_comp_time: 0.000022
+avg_comm_time: 0.023612
+avg_total_time: 0.023634
+not_par_comp_time: 0.000098
+speedup: 4.406176
+#Matrix: 9%% scarsity - Row: 2048 - Columns: 2048 - Processes: 8
+avg_comp_time: 0.000053
+avg_comm_time: 0.051103
+avg_total_time: 0.051156
+not_par_comp_time: 0.000443
+speedup: 8.331880
+#Matrix: 9%% scarsity - Row: 4096 - Columns: 4096 - Processes: 16
+avg_comp_time: 0.000134
+avg_comm_time: 0.080148
+avg_total_time: 0.080283
+not_par_comp_time: 0.002057
+speedup: 15.293787
+#Matrix: 9%% scarsity - Row: 8192 - Columns: 8192 - Processes: 32
+avg_comp_time: 0.000294
+avg_comm_time: 0.163899
+avg_total_time: 0.164193
+not_par_comp_time: 0.008708
+speedup: 29.631730
+#Matrix: 9%% scarsity - Row: 16384 - Columns: 16384 - Processes: 64
+avg_comp_time: 0.000877
+avg_comm_time: 0.627264
+avg_total_time: 0.628142
+not_par_comp_time: 0.057168
+speedup: 65.166240

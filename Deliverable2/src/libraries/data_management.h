@@ -1,5 +1,5 @@
-#ifndef SPMV_H
-#define SPMV_H
+#ifndef DATA_MANAGEMENT_H
+#define DATA_MANAGEMENT_H
 
 double compute_avg(int num_iterations, double *time);
 int find_outlier(int num_iterations, double *time, double avg);

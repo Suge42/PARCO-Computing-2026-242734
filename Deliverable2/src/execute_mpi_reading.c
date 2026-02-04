@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    strcpy(result_filename, argv[3]); // File to store results
+    snprintf(result_filename, sizeof(result_filename), "%s", argv[3]); // File to store results
 
     num_iterations = atoi(argv[2]); // Number of times to repeat the sending process for averaging
     
@@ -65,11 +65,12 @@ int main(int argc, char *argv[]) {
         communication_time[i] = 0.0;
         not_par_computation_time[i] = 0.0;
     }
+    
 
     for (int iter = 0; iter < num_iterations; iter++) {
         if (rank == 0) {
                     
-            strncpy(filename, argv[1], 256); // Copy the filename to a local variable
+            snprintf(filename, sizeof(filename), "%s", argv[1]); // Copy the filename to a local variable
 
             /* Initial checks on the matrix */
             printf("Iteration: %d - Process %d is checking the matrix: %s\n", iter+1, rank, filename);
@@ -131,6 +132,7 @@ int main(int argc, char *argv[]) {
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
+            
             for (int i = 0; i < M; i++) {
                 vector[i] = (rand() % 9) + 1; // Initialize all elements to 1.0
             }
@@ -200,12 +202,21 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < processes; i++) {
                 int start_row = rows_distribution[i];
                 int local_M = rows_distribution[i+1] - start_row;
+                if (local_M > max_M) {
+                    fprintf(stderr, "Iteration: %d - Process %d found local_M %d larger than max_M %d from process %d\n", iter+1, rank, local_M, max_M, i+1);
+                    fflush(stderr);
+                    MPI_Abort(MPI_COMM_WORLD, 1);
+                }
                 MPI_Recv(temp_buffer, local_M, MPI_DOUBLE, i+1, 0, MPI_COMM_WORLD, &status);
                 for (int j = 0; j < local_M; j++) {
                     results[start_row + j] = temp_buffer[j];
                 }
             }
-            free(temp_buffer); // cleanup
+            
+            if (temp_buffer) {
+                free(temp_buffer); // cleanup
+                temp_buffer = NULL;
+            }
             t_end = MPI_Wtime();
             communication_time[iter] += (t_end - t_start);
 
@@ -244,8 +255,14 @@ int main(int argc, char *argv[]) {
                 computation_time[iter] += proc_comp_time;
             }
 
-            free(local_results);
-            free(rows_distribution);
+            if (local_results) {
+                free(local_results);
+                local_results = NULL;
+            }
+            if (rows_distribution) {
+                free(rows_distribution);
+                rows_distribution = NULL;
+            }
 
         } else {        
             /* Receive the filename from rank 0 */
@@ -287,7 +304,7 @@ int main(int argc, char *argv[]) {
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
-
+            
 
             if (!read_matrix_to_csr_partial(filename, start_row, end_row, &nz, &row_ptr, &vals)) {
                 fprintf(stderr, "Process %d failed reading its part of the matrix: %s\n", rank, filename);
@@ -333,10 +350,22 @@ int main(int argc, char *argv[]) {
         // Barrier to ensure all processes finished using heap memory before freeing
         MPI_Barrier(MPI_COMM_WORLD);
 
-        free(row_ptr);
-        free(vals);
-        free(vector);
-        free(results);
+        if (row_ptr) {
+            free(row_ptr);
+            row_ptr = NULL;
+        }
+        if (vals) {
+            free(vals);
+            vals = NULL;
+        }
+        if (results) {
+            free(results);
+            results = NULL;
+        }
+        if (vector) {
+            free(vector);
+            vector = NULL;
+        }
         // Barrier to synchronize before next iteration
         MPI_Barrier(MPI_COMM_WORLD);
     }
@@ -391,9 +420,11 @@ int main(int argc, char *argv[]) {
     }
     
 
+    
     free(computation_time);
     free(communication_time);
     free(not_par_computation_time);
+    
 
     MPI_Finalize();
     return 0;

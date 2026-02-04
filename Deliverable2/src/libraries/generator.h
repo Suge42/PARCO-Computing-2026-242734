@@ -1,5 +1,5 @@
-#ifndef SPMV_H
-#define SPMV_H
+#ifndef GENERATOR_H
+#define GENERATOR_H
 
 #include <stdbool.h>
 

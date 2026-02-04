@@ -62,37 +62,22 @@ bool coo_to_csr(int nz, int start_row, int M, int *I, int *J, double *vals, int 
     
     // Conversion from COO to CSR
     int index = 0;
-    int current_row = 0;
-    (*row_ptr) = (int *) malloc((M+1) * sizeof(int));
+    *row_ptr = (int *) malloc((M+1) * sizeof(int));
     if (!(*row_ptr)) {
         fprintf(stderr, "Allocation failed. Needed ~%zu MB for COO format alone.\n",
                 ((M+1 * sizeof(int))) / (1024 * 1024));
         fflush(stderr);
         return false;
     }
-    (*row_ptr)[0] = 0; 
-    (*row_ptr)[1] = 0; // This is enough to initialie the array;
+    (*row_ptr)[0] = 0; // This is enough to initialie the array;
 
-    while (current_row < M) {
-        if (index < nz) {
-            if (I[index] == current_row + start_row) {
-                // If I have an element in the current row, increment the row pointer
-                (*row_ptr)[current_row+1]++;
+    for (int i = 0; i < M; i++) {
+        // Each row ends where it starts, unless we find elements
+        (*row_ptr)[i+1] = (*row_ptr)[i]; 
 
-                // I only increase the index if I have found an element in the new row;
-                // Otherwise, I keep the same index to check with the next row value;
-                index++;
-            } else {
-                // If the element is not in the current row, I move to the next
-                // and copy the starting value from the previous one;
-                current_row++;
-                (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
-            }
-        } else {
-            // If I finish the elements because the last rows are empty, I still
-            // Need to fill them
-            current_row++;
-            (*row_ptr)[current_row+1] = (*row_ptr)[current_row];
+        while (index < nz && I[index] == i + start_row) {
+            (*row_ptr)[i+1]++;
+            index++;
         }
     }
 
