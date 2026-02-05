@@ -14,29 +14,32 @@ def parse_benchmark_file(filename):
     current = {}
 
     matrix_pattern = re.compile(
-        r"Row:\s*(\d+)\s*-\s*Columns:\s*(\d+)\s*-\s*Processes:\s*(\d+)"
+        r"Row:\s*(\d+)\s*-\s*Columns:\s*(\d+)\s*-\s*Working_processes:\s*(\d+)"
     )
-    value_pattern = re.compile(r"(\w+):\s*([0-9.]+)")
+    value_pattern = re.compile(r"(\w+):\s*([0-9.eE+-]+)")
 
     with open(filename, "r") as f:
         for line in f:
             line = line.strip()
 
-            if line.startswith("#"):
+            if line.startswith("#Matrix"):
+                # Save previous entry
+                if current:
+                    data.append(current)
+                    current = {}
+
                 match = matrix_pattern.search(line)
                 if match:
-                    if "speedup" in current:
-                        data.append(current)
-                        current = {}
-
                     current["rows"] = int(match.group(1))
                     current["cols"] = int(match.group(2))
                     current["processes"] = int(match.group(3))
+
             else:
                 match = value_pattern.match(line)
                 if match:
                     current[match.group(1)] = float(match.group(2))
 
+        # Append last block
         if current:
             data.append(current)
 
