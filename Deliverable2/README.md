@@ -94,7 +94,7 @@ Must be run from `Deliverable2` folder
 
 ```bash
 # Download matrices from Suitsparse
-./matrix_download.sh MATRIX_NAME
+./matrix_download.sh MATRIX_GROUP MATRIX_NAME
 ```
 
 ---

@@ -1,0 +1,11 @@
+./src/libraries/mmio.c: In function ‘mm_read_mtx_crd_data’:
+./src/libraries/mmio.c:265:39: warning: unused parameter ‘M’ [-Wunused-parameter]
+  265 | int mm_read_mtx_crd_data(FILE *f, int M, int N, int nz, int I[], int J[],
+      |                                   ~~~~^
+./src/libraries/mmio.c:265:46: warning: unused parameter ‘N’ [-Wunused-parameter]
+  265 | int mm_read_mtx_crd_data(FILE *f, int M, int N, int nz, int I[], int J[],
+      |                                          ~~~~^
+./src/libraries/mmio.c: In function ‘mm_typecode_to_str’:
+./src/libraries/mmio.c:460:9: warning: variable ‘error’ set but not used [-Wunused-but-set-variable]
+  460 |     int error =0;
+      |         ^~~~~

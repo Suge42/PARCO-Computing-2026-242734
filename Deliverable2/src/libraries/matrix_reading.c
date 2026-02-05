@@ -45,14 +45,14 @@ bool check_matrix_file(char *filename, int *M, int *N, int *nz) {
 }
 
 
-bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
+bool read_matrix_to_csr_total(char *filename, int **row_ptr, int **J, double **vals) {
     FILE *f;
     MM_typecode matcode;
     int ret_code;
     int M; // Number of rows
     int N; // Number of columns
     int nz; // Total number of non-zero entries
-    int *I = NULL, *J = NULL;
+    int *local_I = NULL;
 
     /* Simpler checks repeat, to ensure the file is correct */
     if ((f = fopen(filename, "r")) == NULL) {
@@ -82,10 +82,10 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     }
 
     /* reseve memory for matrices */
-    I = (int *) malloc(nz * sizeof(int)); // Rows pointer
-    J = (int *) malloc(nz * sizeof(int)); // Columns pointer
+    local_I = (int *) malloc(nz * sizeof(int)); // Rows pointer
+    *J = (int *) malloc(nz * sizeof(int)); // Columns pointer
     *vals = (double *) malloc(nz * sizeof(double)); // Values pointer
-    if (!I || !J || !(*vals)) {
+    if (!local_I || !(*J) || !(*vals)) {
         fprintf(stderr, "Failed to allocate memory for matrix data.\n");
         fflush(stderr);
         return false;
@@ -93,11 +93,32 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
     
 
     /* Reading the actual matrix data */
-    for (int i=0; i<nz; i++) {
-        fscanf(f, "%d %d %lf\n", &I[i], &J[i], &(*vals)[i]);
-        I[i]--;  // adjust from 1-based to 0-based
-        J[i]--;
+    char line[256]; // Buffer for one line
+
+    for (int i = 0; i < nz; i++) {
+        // Read one line
+        if (!fgets(line, sizeof(line), f)) {
+            fprintf(stderr, "Unexpected EOF or read error at line %d\n", i+1);
+            break;
+        }
+
+        char *p = line;
+
+        int row = (int)strtol(p, &p, 10); // Parse row index
+        row--; // Convert to 0-based indexing
+
+        
+        int col = (int)strtol(p, &p, 10); // Parse column index
+        col--; // Convert to 0-based indexing
+
+        double val = strtod(p, NULL); // Parse value
+
+        // Store in local arrays
+        local_I[i] = row;
+        (*J)[i] = col;
+        (*vals)[i] = val;
     }
+
 
     if (f != stdin) {
         fclose(f);
@@ -116,15 +137,14 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
 
 
     // Sort by row indices
-    bubbleSort(I, J, *vals, nz);
-    free(J); // We don't need J anymore, we only work on rows and values
+    bubbleSort(local_I, *J, *vals, nz);
     
     //Conversion from COO to CSR
     int index = 0;
     *row_ptr = (int *) malloc((M+1) * sizeof(int));
     if (!(*row_ptr)) {
         fprintf(stderr, "Allocation failed. Needed ~%zu MB for COO format alone.\n",
-                ((M+1 * sizeof(int))) / (1024 * 1024));
+                ((M+1) * sizeof(int)) / (1024 * 1024));
         fflush(stderr);
         return false;
     }
@@ -134,7 +154,7 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
         // Each row ends where it starts, unless we find elements
         (*row_ptr)[i+1] = (*row_ptr)[i]; 
 
-        while (index < nz && I[index] == i) {
+        while (index < nz && local_I[index] == i) {
             (*row_ptr)[i+1]++;
             index++;
         }
@@ -146,20 +166,20 @@ bool read_matrix_to_csr_total(char *filename, int **row_ptr, double **vals) {
         printf("Row %d: %d\n", i, a_row[i]);
     }*/
 
-    free(I);
+    free(local_I);
 
     return true;
 }
 
 
-bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int *local_nz, int **row_ptr, double **vals) {
+bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int *local_nz, int **row_ptr, int **J, double **vals) {
     // Similar implementation as matrix_to_csr_total but only for rows in [start_row, end_row)
 
     FILE *f;
     int M; // Number of rows
     int N; // Number of columns
     int nz; // Total number of non-zero entries
-    int *local_I = NULL, *local_J = NULL;
+    int *local_I = NULL;
     int local_M = end_row - start_row;
 
     /* Simpler checks repeat, to ensure the file is correct */
@@ -185,24 +205,31 @@ bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int 
 
     /* Count elements in the specified row range */
     *local_nz = 0;
-    
-    for (int i=0; i<nz; i++) {
-        int row_tmp, col_tmp;
-        double value;
-        fscanf(f, "%d %d %lf\n", &row_tmp, &col_tmp, &value);
-        row_tmp--;  // adjust from 1-based to 0-based
+
+    for (int i = 0; i < nz; i++) {
+        if (!fgets(line, sizeof(line), f)) {
+            fprintf(stderr, "Unexpected end of file at line %d\n", i+1);
+            break;
+        }
+
+        char *p = line;
+
+        int row_tmp = (int)strtol(p, &p, 10); // Parse only row index
+        row_tmp--; // Adjust from 1-based to 0-based
+
+        // Count only if row belongs to local range
         if (row_tmp >= start_row && row_tmp < end_row) {
             (*local_nz)++;
         }
-        // Since the file is in column-major order, we can't stop early
     }
+
 
 
     /* reseve memory for matrices */
     local_I = (int *) malloc((*local_nz) * sizeof(int)); // Rows pointer
-    local_J = (int *) malloc((*local_nz) * sizeof(int)); // Columns pointer
+    *J = (int *) malloc((*local_nz) * sizeof(int)); // Columns pointer
     *vals = (double *) malloc((*local_nz) * sizeof(double)); // Values pointer
-    if (!local_I || !local_J || !(*vals)) {
+    if (!local_I || !(*J) || !(*vals)) {
         fprintf(stderr, "Failed to allocate memory for local matrix data.\n");
         fflush(stderr);
         return false;
@@ -212,29 +239,38 @@ bool read_matrix_to_csr_partial(char *filename, int start_row, int end_row, int 
     /* Reading the actual matrix data */
     fseek(f, data_start_pos, SEEK_SET); // Reset file position to start reading data
     int index = 0;
-    while (index < *local_nz && !feof(f)) {
-        int row_tmp, col_tmp;
-        double value;
-        fscanf(f, "%d %d %lf\n", &row_tmp, &col_tmp, &value);
-        row_tmp--;  // adjust from 1-based to 0-based
-        col_tmp--;
-        // Save only if in the specified row range
+
+    while (index < *local_nz) {
+        if (!fgets(line, sizeof(line), f)) { // Read one line
+            break; // EOF or error
+        }
+
+        char *p = line;
+
+        int row_tmp = (int)strtol(p, &p, 10); // Parse row index
+        row_tmp--; // Convert to 0-based indexing
+
+        // Keep only entries for local rows
         if (row_tmp >= start_row && row_tmp < end_row) {
-            local_I[index] = row_tmp - start_row; // Adjust row index for local CSR
-            local_J[index] = col_tmp;
+            int col_tmp = (int)strtol(p, &p, 10); // Parse column index
+            col_tmp--; // convert to 0-based indexing
+
+            double value = strtod(p, NULL); // Parse value
+
+            local_I[index] = row_tmp - start_row; // Local row index
+            (*J)[index] = col_tmp;
             (*vals)[index] = value;
             index++;
         }
-        // Since the file is in column-major order, we can't stop early
     }
+
 
     if (f != stdin) {
         fclose(f);
     }
 
     // Sort by row indices
-    bubbleSort(local_I, local_J, *vals, *local_nz);
-    free(local_J); // We don't need J anymore, we only work on rows and values
+    bubbleSort(local_I, *J, *vals, *local_nz);
 
 
     //Conversion from COO to CSR

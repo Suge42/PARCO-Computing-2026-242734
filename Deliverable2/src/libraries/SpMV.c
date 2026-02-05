@@ -3,13 +3,14 @@
 #include <math.h>
 #include "SpMV.h"
 
-void SpMV_csr(int M, int *row_ptr, double *vals, double *vector, double *result) {
-    for (int i = 0; i < M; i++) { // Go through each row
-        result[i] = 0.0;
+void SpMV_csr(int M, int *row_ptr, int *col_idx, double *vals, double *vector, double *result) {
+    for (int i = 0; i < M; i++) { // Loop over local rows
+        double sum = 0.0;
         // Go through each non-zero element in the row
         for (int j = row_ptr[i]; j < row_ptr[i+1]; j++) {
-            result[i] += vals[j] * vector[i]; // Assuming vector is aligned with rows
+            sum += vals[j] * vector[col_idx[j]];
         }
+        result[i] = sum;
     }
 }
 

@@ -1,0 +1,6 @@
+#Matrix: 9%% scarsity - Row: 8 - Columns: 8 - Processes: 3
+avg_comp_time: 0.000000
+avg_comm_time: 0.000005
+avg_total_time: 0.000005
+not_par_comp_time: 0.000002
+speedup: 23.200000

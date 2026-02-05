@@ -1,0 +1,618 @@
+Working directory: /home/leonardo.sandrini/Deliverable2
+=-=-=-=-=-=-=-=-=-=
+Running with 1 processes and 256X256 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000006 seconds.
+Overall communication time across processes: 0.005833 seconds.
+Overall total time across processes: 0.005839 seconds.
+=-=
+Average computation time across processes: 0.000006 seconds.
+Average communication time across processes: 0.005833 seconds.
+Average total time across processes: 0.005839 seconds.
+=-=
+Unparallelized computation time: 0.000007 seconds.
+Speedup achieved: 1.210046
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 2 processes and 512X512 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000023 seconds.
+Overall communication time across processes: 0.021572 seconds.
+Overall total time across processes: 0.021595 seconds.
+=-=
+Average computation time across processes: 0.000011 seconds.
+Average communication time across processes: 0.010786 seconds.
+Average total time across processes: 0.010797 seconds.
+=-=
+Unparallelized computation time: 0.000026 seconds.
+Speedup achieved: 2.304498
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 4 processes and 1024X1024 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000115 seconds.
+Overall communication time across processes: 0.086881 seconds.
+Overall total time across processes: 0.086996 seconds.
+=-=
+Average computation time across processes: 0.000029 seconds.
+Average communication time across processes: 0.021720 seconds.
+Average total time across processes: 0.021749 seconds.
+=-=
+Unparallelized computation time: 0.000126 seconds.
+Speedup achieved: 4.392229
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 8 processes and 2048X2048 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000538 seconds.
+Overall communication time across processes: 0.321110 seconds.
+Overall total time across processes: 0.321648 seconds.
+=-=
+Average computation time across processes: 0.000067 seconds.
+Average communication time across processes: 0.040139 seconds.
+Average total time across processes: 0.040206 seconds.
+=-=
+Unparallelized computation time: 0.000527 seconds.
+Speedup achieved: 7.834852
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 16 processes and 4096X4096 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.002598 seconds.
+Overall communication time across processes: 1.417621 seconds.
+Overall total time across processes: 1.420219 seconds.
+=-=
+Average computation time across processes: 0.000162 seconds.
+Average communication time across processes: 0.088601 seconds.
+Average total time across processes: 0.088764 seconds.
+=-=
+Unparallelized computation time: 0.002286 seconds.
+Speedup achieved: 14.075471
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 32 processes and 8192X8192 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.013813 seconds.
+Overall communication time across processes: 5.746518 seconds.
+Overall total time across processes: 5.760331 seconds.
+=-=
+Average computation time across processes: 0.000432 seconds.
+Average communication time across processes: 0.179579 seconds.
+Average total time across processes: 0.180010 seconds.
+=-=
+Unparallelized computation time: 0.009401 seconds.
+Speedup achieved: 21.777586
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 64 processes and 16384X16384 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.081120 seconds.
+Overall communication time across processes: 55.421182 seconds.
+Overall total time across processes: 55.502302 seconds.
+=-=
+Average computation time across processes: 0.001267 seconds.
+Average communication time across processes: 0.865956 seconds.
+Average total time across processes: 0.867223 seconds.
+=-=
+Unparallelized computation time: 0.046954 seconds.
+Speedup achieved: 37.044659
+=-=
+
+=-=-=-=-=-=-=-=-=-=
+
+=-=-=-=-=-=-=-=-=-=
+Running with 128 processes and 32768X32768 matrix
+Iteration: 1 - Process 0 is creating the matrix
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is creating the matrix
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is creating the matrix
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is creating the matrix
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is creating the matrix
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is creating the matrix
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is creating the matrix
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is creating the matrix
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is creating the matrix
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is creating the matrix
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending the matrix in COO format to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.486562 seconds.
+Overall communication time across processes: 249.885411 seconds.
+Overall total time across processes: 250.371973 seconds.
+=-=
+Average computation time across processes: 0.003801 seconds.
+Average communication time across processes: 1.952230 seconds.
+Average total time across processes: 1.956031 seconds.
+=-=
+Unparallelized computation time: 0.165246 seconds.
+Speedup achieved: 43.471367
+=-=
+
+
+=-=-=-=-=-=-=-=-=-=
+Execution completed

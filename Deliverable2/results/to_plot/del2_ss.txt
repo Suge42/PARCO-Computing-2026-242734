@@ -1,0 +1,48 @@
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 1
+avg_comp_time: 0.000528
+avg_comm_time: 0.052702
+avg_total_time: 0.053230
+not_par_comp_time: 0.000634
+speedup: 1.200020
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 2
+avg_comp_time: 0.000238
+avg_comm_time: 0.000371
+avg_total_time: 0.000608
+not_par_comp_time: 0.000740
+speedup: 3.114517
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 4
+avg_comp_time: 0.000122
+avg_comm_time: 0.000298
+avg_total_time: 0.000421
+not_par_comp_time: 0.000740
+speedup: 6.042180
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 8
+avg_comp_time: 0.000095
+avg_comm_time: 0.000247
+avg_total_time: 0.000341
+not_par_comp_time: 0.000727
+speedup: 7.684166
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 16
+avg_comp_time: 0.000036
+avg_comm_time: 0.000184
+avg_total_time: 0.000220
+not_par_comp_time: 0.000813
+speedup: 22.416956
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 32
+avg_comp_time: 0.000018
+avg_comm_time: 0.000159
+avg_total_time: 0.000177
+not_par_comp_time: 0.000726
+speedup: 41.382902
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 64
+avg_comp_time: 0.000009
+avg_comm_time: 0.000180
+avg_total_time: 0.000189
+not_par_comp_time: 0.000817
+speedup: 91.073628
+#Matrix: matrices/epb3_Real_84k_0006.mtx - Row: 84617 - Columns: 84617 - Working_processes: 128
+avg_comp_time: 0.000005
+avg_comm_time: 0.000394
+avg_total_time: 0.000398
+not_par_comp_time: 0.000873
+speedup: 179.189123

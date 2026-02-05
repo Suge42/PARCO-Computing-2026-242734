@@ -180,14 +180,14 @@ int main(int argc, char *argv[]) {
             }
 
 
-            /* Send the right part of the vector to all processes */
+            /* Send the  vector to all processes */
             t_start = MPI_Wtime();
             printf("Iteration: %d - Process %d is sending parts of the vector to other processes.\n", iter+1, rank);
             fflush(stdout);
             for (int i = 0; i < processes; i++) {
-                int start_row = rows_distribution[i];
-                int local_M = rows_distribution[i+1] - start_row;
-                MPI_Send(&vector[start_row], local_M, MPI_DOUBLE, i+1, // i+1 because rank 0 does not process rows
+                MPI_Send(&M, 1, MPI_INT, i+1, // i+1 because rank 0 does not process rows
+                    0, MPI_COMM_WORLD);
+                MPI_Send(vector, M, MPI_DOUBLE, i+1, // i+1 because rank 0 does not process rows
                     0, MPI_COMM_WORLD);
             }
             t_end = MPI_Wtime();
@@ -231,7 +231,7 @@ int main(int argc, char *argv[]) {
 
 
             /* Compute the SpMV result */
-            SpMV_csr(M, row_ptr, vals, vector, local_results);
+            SpMV_csr(M, row_ptr, J, vals, vector, local_results);
             double local_end = MPI_Wtime();
             not_par_computation_time[iter] = local_end - local_start;
 
@@ -346,14 +346,15 @@ int main(int argc, char *argv[]) {
             fflush(stdout);*/
             
 
-            /* Receive the part of the vector from rank 0 */
-            vector = (double *) malloc(local_M * sizeof(double));
+            /* Receive the vector from rank 0 */
+            MPI_Recv(&M, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+            vector = (double *) malloc(M * sizeof(double));
             if (!vector) {
                 fprintf(stderr, "Process %d failed to allocate memory for vector\n", rank);
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
-            MPI_Recv(vector, local_M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(vector, M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
 
             /* Print received vector */
             /*printf("Process %d received vector:\n", rank);
@@ -400,7 +401,7 @@ int main(int argc, char *argv[]) {
             t_start = MPI_Wtime();
             //printf("Process %d is computing its SpMV part.\n", rank);
             //fflush(stdout);
-            SpMV_csr(local_M, row_ptr, vals, vector, results);
+            SpMV_csr(local_M, row_ptr, J, vals, vector, results);
 
             /* Print result vector */
             //printf("Process %d results:\n", rank);

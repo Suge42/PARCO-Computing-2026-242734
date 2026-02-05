@@ -1,0 +1,108 @@
+#!/bin/bash
+# Job name
+#PBS -N del2_strong_scaling
+# Output files
+#PBS -o ./results/del2_ss.out
+#PBS -e ./results/del2_ss.err
+# Queue name
+#PBS -q short_cpuQ
+# Set the maximum wall time
+#PBS -l walltime=6:00:00
+# Number of nodes, cpus, mpi processors and amount of memory
+#PBS -l select=8:ncpus=32:mpiprocs=64:mem=32gb
+
+
+# Test a single matrix, choosing file from the command line
+if [[ -z $MATRIX_FILE ]]; then
+  echo "Missing matrix file" >&2
+  exit 1
+fi
+
+# To store data in a compact and plottable way
+RESULT_FILE="results/to_plot/del2_ss.txt"
+
+
+# Modules for python and MPI
+module load gcc91
+module load mpich-3.2.1--gcc-9.1.0
+
+
+# Select the working directory 
+#cd Deliverable2
+cd "$PBS_O_WORKDIR"
+
+echo "Working directory: $(pwd)"
+
+# Compile the code
+mpicc -O2 -g -Wall -Wextra \
+  ./src/execute_mpi_reading.c \
+  ./src/libraries/SpMV.c \
+  ./src/libraries/data_management.c \
+  ./src/libraries/bubblesort.c \
+  ./src/libraries/mmio.c \
+  ./src/libraries/matrix_reading.c \
+  -o del2_ss
+  
+if [ ! -f del2_ss ]; then
+  echo "Compilation failed — executable not found!"
+  exit 1
+fi
+
+
+# Remove previous results
+if [ -f "$RESULT_FILE" ]; then
+    rm "$RESULT_FILE"
+fi
+
+
+# Run the code
+# Since we're working on strong scaling, we double at each iteration the number of processes
+
+# For each run, do 10 iterations
+# The number of processes is (process 0 + working processes)
+# mpirun -np "NUM_PROCESSES" "exectuable" "MATRIX_FILE" "iterations" "RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 1 processes"
+mpirun -np 2 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 2 processes"
+mpirun -np 3 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 4 processes"
+mpirun -np 5 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 8 processes"
+mpirun -np 9 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 16 processes"
+mpirun -np 17 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 32 processes"
+mpirun -np 33 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 64 processes"
+mpirun -np 65 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Running with 128 processes"
+mpirun -np 129 ./del2_ss "$MATRIX_FILE" 10 "$RESULT_FILE"
+echo "=-=-=-=-=-=-=-=-=-="
+
+
+rm ./del2_ss
+echo ""
+echo "=-=-=-=-=-=-=-=-=-="
+echo "Execution completed"

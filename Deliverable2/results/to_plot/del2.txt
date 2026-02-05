@@ -1,0 +1,6 @@
+#Matrix: matrices/6_test.mtx - Row: 6 - Columns: 6 - Working_processes: 1
+avg_comp_time: 0.000000
+avg_comm_time: 0.000017
+avg_total_time: 0.000017
+not_par_comp_time: 0.000000
+speedup: 2.200000

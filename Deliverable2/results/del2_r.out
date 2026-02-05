@@ -1,0 +1,225 @@
+Working directory: /home/leonardo.sandrini/Deliverable2
+=-=-=-=-=-=-=-=-=-=
+
+Iteration: 1 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 1 - Process 0 is broadcasting the filename to other processes.
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 2 - Process 0 is broadcasting the filename to other processes.
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 3 - Process 0 is broadcasting the filename to other processes.
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 4 - Process 0 is broadcasting the filename to other processes.
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 5 - Process 0 is broadcasting the filename to other processes.
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 6 - Process 0 is broadcasting the filename to other processes.
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 7 - Process 0 is broadcasting the filename to other processes.
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 8 - Process 0 is broadcasting the filename to other processes.
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 9 - Process 0 is broadcasting the filename to other processes.
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 10 - Process 0 is broadcasting the filename to other processes.
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000806 seconds.
+Overall communication time across processes: 0.000102 seconds.
+Overall total time across processes: 0.000909 seconds.
+=-=
+Average computation time across processes: 0.000403 seconds.
+Average communication time across processes: 0.000051 seconds.
+Average total time across processes: 0.000454 seconds.
+=-=
+Unparallelized computation time: 0.000806 seconds.
+Speedup achieved: 1.999277
+=-=
+
+Iteration: 1 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 1 - Process 0 is broadcasting the filename to other processes.
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 2 - Process 0 is broadcasting the filename to other processes.
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 3 - Process 0 is broadcasting the filename to other processes.
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 4 - Process 0 is broadcasting the filename to other processes.
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 5 - Process 0 is broadcasting the filename to other processes.
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 6 - Process 0 is broadcasting the filename to other processes.
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 7 - Process 0 is broadcasting the filename to other processes.
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 8 - Process 0 is broadcasting the filename to other processes.
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 9 - Process 0 is broadcasting the filename to other processes.
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 10 - Process 0 is broadcasting the filename to other processes.
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000819 seconds.
+Overall communication time across processes: 0.000118 seconds.
+Overall total time across processes: 0.000937 seconds.
+=-=
+Average computation time across processes: 0.000205 seconds.
+Average communication time across processes: 0.000029 seconds.
+Average total time across processes: 0.000234 seconds.
+=-=
+Unparallelized computation time: 0.000803 seconds.
+Speedup achieved: 3.923283
+=-=
+
+Iteration: 1 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 1 - Process 0 is broadcasting the filename to other processes.
+Iteration: 1 - Process 0 is sending rows distribution to other processes.
+Iteration: 1 - Process 0 is sending parts of the vector to other processes.
+Iteration: 1 - Computation started.
+	Iteration: 1 - Results are correct for MPI parallelization.
+Iteration: 2 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 2 - Process 0 is broadcasting the filename to other processes.
+Iteration: 2 - Process 0 is sending rows distribution to other processes.
+Iteration: 2 - Process 0 is sending parts of the vector to other processes.
+Iteration: 2 - Computation started.
+	Iteration: 2 - Results are correct for MPI parallelization.
+Iteration: 3 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 3 - Process 0 is broadcasting the filename to other processes.
+Iteration: 3 - Process 0 is sending rows distribution to other processes.
+Iteration: 3 - Process 0 is sending parts of the vector to other processes.
+Iteration: 3 - Computation started.
+	Iteration: 3 - Results are correct for MPI parallelization.
+Iteration: 4 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 4 - Process 0 is broadcasting the filename to other processes.
+Iteration: 4 - Process 0 is sending rows distribution to other processes.
+Iteration: 4 - Process 0 is sending parts of the vector to other processes.
+Iteration: 4 - Computation started.
+	Iteration: 4 - Results are correct for MPI parallelization.
+Iteration: 5 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 5 - Process 0 is broadcasting the filename to other processes.
+Iteration: 5 - Process 0 is sending rows distribution to other processes.
+Iteration: 5 - Process 0 is sending parts of the vector to other processes.
+Iteration: 5 - Computation started.
+	Iteration: 5 - Results are correct for MPI parallelization.
+Iteration: 6 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 6 - Process 0 is broadcasting the filename to other processes.
+Iteration: 6 - Process 0 is sending rows distribution to other processes.
+Iteration: 6 - Process 0 is sending parts of the vector to other processes.
+Iteration: 6 - Computation started.
+	Iteration: 6 - Results are correct for MPI parallelization.
+Iteration: 7 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 7 - Process 0 is broadcasting the filename to other processes.
+Iteration: 7 - Process 0 is sending rows distribution to other processes.
+Iteration: 7 - Process 0 is sending parts of the vector to other processes.
+Iteration: 7 - Computation started.
+	Iteration: 7 - Results are correct for MPI parallelization.
+Iteration: 8 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 8 - Process 0 is broadcasting the filename to other processes.
+Iteration: 8 - Process 0 is sending rows distribution to other processes.
+Iteration: 8 - Process 0 is sending parts of the vector to other processes.
+Iteration: 8 - Computation started.
+	Iteration: 8 - Results are correct for MPI parallelization.
+Iteration: 9 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 9 - Process 0 is broadcasting the filename to other processes.
+Iteration: 9 - Process 0 is sending rows distribution to other processes.
+Iteration: 9 - Process 0 is sending parts of the vector to other processes.
+Iteration: 9 - Computation started.
+	Iteration: 9 - Results are correct for MPI parallelization.
+Iteration: 10 - Process 0 is checking the matrix: matrices/11k_0p35.mtx
+Iteration: 10 - Process 0 is broadcasting the filename to other processes.
+Iteration: 10 - Process 0 is sending rows distribution to other processes.
+Iteration: 10 - Process 0 is sending parts of the vector to other processes.
+Iteration: 10 - Computation started.
+	Iteration: 10 - Results are correct for MPI parallelization.
+=-=
+Overall computation time across processes: 0.000790 seconds.
+Overall communication time across processes: 0.000115 seconds.
+Overall total time across processes: 0.000906 seconds.
+=-=
+Average computation time across processes: 0.000099 seconds.
+Average communication time across processes: 0.000014 seconds.
+Average total time across processes: 0.000113 seconds.
+=-=
+Unparallelized computation time: 0.000811 seconds.
+Speedup achieved: 8.210209
+=-=
+
+
+=-=-=-=-=-=-=-=-=-=
+Execution completed

@@ -1,0 +1,18 @@
+#Matrix: matrices/11k_0p35.mtx - Row: 10974 - Columns: 10974 - Working_processes: 2
+avg_comp_time: 0.000403
+avg_comm_time: 0.000051
+avg_total_time: 0.000454
+not_par_comp_time: 0.000806
+speedup: 1.999277
+#Matrix: matrices/11k_0p35.mtx - Row: 10974 - Columns: 10974 - Working_processes: 4
+avg_comp_time: 0.000205
+avg_comm_time: 0.000029
+avg_total_time: 0.000234
+not_par_comp_time: 0.000803
+speedup: 3.923283
+#Matrix: matrices/11k_0p35.mtx - Row: 10974 - Columns: 10974 - Working_processes: 8
+avg_comp_time: 0.000099
+avg_comm_time: 0.000014
+avg_total_time: 0.000113
+not_par_comp_time: 0.000811
+speedup: 8.210209

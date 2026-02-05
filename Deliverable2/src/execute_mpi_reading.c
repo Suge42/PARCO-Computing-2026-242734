@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     char filename[256] = "";
     char result_filename[256] = "";
 
-    int *row_ptr = NULL; // Initialize pointers to avoid problems with free()
+    int *J= NULL, *row_ptr = NULL; // Initialize pointers to avoid problems with free()
     double *vals = NULL, *vector = NULL, *results = NULL;
     int M; // Number of rows
     int N; // Number of columns
@@ -138,14 +138,15 @@ int main(int argc, char *argv[]) {
             }
 
 
-            /* Send the right part of the vector to all processes */
+            /* Send the vector to all processes */
             t_start = MPI_Wtime();
             printf("Iteration: %d - Process %d is sending parts of the vector to other processes.\n", iter+1, rank);
             fflush(stdout);
             for (int i = 0; i < processes; i++) {
-                int start_row = rows_distribution[i];
-                int local_M = rows_distribution[i+1] - start_row;
-                MPI_Send(&vector[start_row], local_M, MPI_DOUBLE, i+1, 0, MPI_COMM_WORLD);
+                MPI_Send(&M, 1, MPI_INT, i+1, // i+1 because rank 0 does not process rows
+                    0, MPI_COMM_WORLD);
+                MPI_Send(vector, M, MPI_DOUBLE, i+1, // i+1 because rank 0 does not process rows
+                    0, MPI_COMM_WORLD);
             }
             t_end = MPI_Wtime();
             communication_time[iter] += (t_end - t_start);
@@ -166,7 +167,7 @@ int main(int argc, char *argv[]) {
             
 
             /* Read the matrix into CSR format */
-            if (!read_matrix_to_csr_total(filename, &row_ptr, &vals)) {
+            if (!read_matrix_to_csr_total(filename, &row_ptr, &J, &vals)) {
                 fprintf(stderr, "Process 0 failed reading the whole matrix: %s\n", filename);
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
@@ -183,7 +184,7 @@ int main(int argc, char *argv[]) {
 
             /* Compute the SpMV result */
             double local_start = MPI_Wtime();
-            SpMV_csr(M, row_ptr, vals, vector, local_results);
+            SpMV_csr(M, row_ptr, J, vals, vector, local_results);
             double local_end = MPI_Wtime();
             not_par_computation_time[iter] = local_end - local_start;
 
@@ -278,14 +279,15 @@ int main(int argc, char *argv[]) {
             printf("Process %d local_M: %d\n", rank, local_M);
             fflush(stdout);*/
 
-            /* Receive the part of the vector from rank 0 */
-            vector = (double *) malloc(local_M * sizeof(double));
+            /* Receive the vector from rank 0 */
+            MPI_Recv(&M, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+            vector = (double *) malloc(M * sizeof(double));
             if (!vector) {
                 fprintf(stderr, "Process %d failed to allocate memory for vector\n", rank);
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
-            MPI_Recv(vector, local_M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
+            MPI_Recv(vector, M, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD, &status);
 
             /* Print received vector */
             //printf("Process %d received vector:\n", rank);
@@ -306,7 +308,7 @@ int main(int argc, char *argv[]) {
             }
             
 
-            if (!read_matrix_to_csr_partial(filename, start_row, end_row, &nz, &row_ptr, &vals)) {
+            if (!read_matrix_to_csr_partial(filename, start_row, end_row, &nz, &row_ptr, &J, &vals)) {
                 fprintf(stderr, "Process %d failed reading its part of the matrix: %s\n", rank, filename);
                 fflush(stderr);
                 MPI_Abort(MPI_COMM_WORLD, 1);
@@ -325,7 +327,7 @@ int main(int argc, char *argv[]) {
             t_start = MPI_Wtime();
             //printf("Process %d is computing its SpMV part.\n", rank);
             //fflush(stdout);
-            SpMV_csr(local_M, row_ptr, vals, vector, results);
+            SpMV_csr(local_M, row_ptr, J, vals, vector, results);
 
             /* Print result vector */
             //printf("Process %d results:\n", rank);
@@ -353,6 +355,10 @@ int main(int argc, char *argv[]) {
         if (row_ptr) {
             free(row_ptr);
             row_ptr = NULL;
+        }
+        if (J) {
+            free(J);
+            J = NULL;
         }
         if (vals) {
             free(vals);
